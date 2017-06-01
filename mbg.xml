@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+  	<!-- 注释生成配置 -->
+  	<commentGenerator>
+  		<!-- 表示取消所有注释的生成 -->
+  		<property name="suppressAllComments" value="true"/>
+  	</commentGenerator>
+  	<!-- 数据库连接信息 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/edu_supervision"
+        userId="root"
+        password="123456">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+	<!-- 指定实体生成位置 -->
+    <javaModelGenerator targetPackage="com.edu.entity" targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+	<!-- 指定sql文件生成的位置，也就是mapper -->
+    <sqlMapGenerator targetPackage="mapper"  targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+	<!-- 指定dao接口生成的位置 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.edu.dao"  targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+	<!-- 指定每个表的生成策略 -->
+    <table tableName="info_content" domainObjectName="InfoContent" ></table>
+    <table tableName="info_slide" domainObjectName="InfoSlide"></table>
+    <table tableName="info_slave" domainObjectName="InfoSlave" ></table>
+    <table tableName="user" domainObjectName="User"></table>
+     <table tableName="info_plate" domainObjectName="InfoPlate"></table>
+
+  </context>
+</generatorConfiguration>

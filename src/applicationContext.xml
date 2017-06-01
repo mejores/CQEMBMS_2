@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xmlns:aop="http://www.springframework.org/schema/aop"  
+    	   xmlns:tx="http://www.springframework.org/schema/tx"
+     		xmlns:p="http://www.springframework.org/schema/p"
+     		 xmlns:util="http://www.springframework.org/schema/util"
+     		  xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+    xmlns:cache="http://www.springframework.org/schema/cache"  
+    xsi:schemaLocation="  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context.xsd  
+    http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans.xsd  
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx.xsd  
+    http://www.springframework.org/schema/jdbc  
+    http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd  
+    http://www.springframework.org/schema/cache  
+    http://www.springframework.org/schema/cache/spring-cache-3.1.xsd  
+    http://www.springframework.org/schema/aop  
+    http://www.springframework.org/schema/aop/spring-aop.xsd  
+    http://www.springframework.org/schema/util  
+    http://www.springframework.org/schema/util/spring-util.xsd"> 
+    
+    
+    
+    <context:component-scan base-package="com.edu">
+	<!-- 排除注解了controller了类 -->
+	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+    <!-- 链接属性 -->
+    <!-- 引入文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--链接池  -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value="${jdbc.driverClass}"/>
+    <property name="jdbcUrl" value="${jdbc.url}"/>
+    <property name="user" value="${jdbc.user}"/>
+    <property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <!-- some properties about mybatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="configLocation" value="classpath:mybatis-config.xml"/>
+    	<property name="dataSource" ref="dataSource"/>
+    	<!-- 指定mybatis的mapper文件 -->
+    	<property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    
+    <!-- 配置mapper扫描器，将mybatis接口实现加入到ioc容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 扫描所有dao接口的实现，加入到ioc容器中 -->
+    	<property name="basePackage" value="com.edu.dao"></property>
+    </bean>
+    
+    <!-- 配置一个可以执行批量的SqlSession -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+    	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+    	
+    	<!-- SIMPLE	执行器执行其它语句，默认值。
+			REUSE	可能重复使用prepared statements 语句
+			BATCH	可以重复执行语句和批量更新    -->
+    	<!-- <constructor-arg name="executorType" value="BATCH"></constructor-arg> -->
+    </bean>
+ 
+   	
+   	<!-- 配置事务管理器 ,这里用的是spring的事务管理器-->
+   	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   		<!-- 配置数据源 -->
+   		<property name="dataSource" ref="dataSource"/>
+   	</bean>
+   	<!-- 开启事务可以使用基于注解的，也可以使用xml配置形式的 事务-->
+   	<!-- 开启注解事务，配置方式 -->
+   	<aop:config>
+   		<!-- 切入点表达式 -->
+   		<!-- 前一个双点表示包下面可以有子包，子包下面的任意方法方法，后一个双点表示参数任意多 -->
+   		<aop:pointcut expression="execution(* com.edu.service..*(..))" id="txPoint"/>
+   		<!-- 配置事务增强 -->
+   		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+   	</aop:config>
+   	
+   	<!-- 配置事务增强，事务如何切入 -->
+   	<!-- 如果事务管理起不叫“transactionManager”，则需要添加属性“transaction-manager” -->
+   	<tx:advice id="txAdvice">
+   		<tx:attributes>
+   			<!-- *代表该切入点切入的所有方法都是事务方法 -->
+   			<tx:method name="*"/>
+   			<!-- 以get开头的所有方法都是查询，所以调优 -->
+   			<tx:method name="get" read-only="true"/>
+   		</tx:attributes>
+   	</tx:advice>
+   	
+    </beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+  <!-- 驼峰命名规则 -->
+  	<settings>
+  		<setting name="mapUnderscoreToCamelCase" value=""/>
+  		<!-- 懒加载，使用时值设为true -->
+  		<setting name="lazyLoadingEnabled" value="true"/>
+  		<!-- 与懒加载配合使用,如果开启，会将全部加载出来，否则需要哪个字段就加载哪个字段，默认为开启（true） -->
+  		<setting name="aggressiveLazyLoading" value="true"/>
+  	</settings>
+  	
+  	
+  	<!-- 别名，方便引用 -->
+  	<typeAliases>
+  		<package name="com.edu.entity"/>
+  	</typeAliases>
+  	
+  	<!-- 引入分页插件 -->
+  	<plugins>
+  		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+  			<!-- 分页参数合理化，当页码小于1，查询第一页，当页码大于最后一页，查询最后一页 -->
+  			<property name="reasonable" value="true"/>
+  		</plugin>
+  	</plugins>
+  
+  </configuration>

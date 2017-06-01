@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.InfoSlideMapper">
+  <resultMap id="BaseResultMap" type="com.edu.entity.InfoSlide">
+    <id column="slide_id" jdbcType="INTEGER" property="slideId" />
+    <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
+    <result column="con_no" jdbcType="VARCHAR" property="conNo" />
+    <result column="img_con" jdbcType="VARCHAR" property="imgCon" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    slide_id, img_path, con_no, img_con, comment
+  </sql>
+  <select id="selectByExample" parameterType="com.edu.entity.InfoSlideExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from info_slide
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from info_slide
+    where slide_id = #{slideId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from info_slide
+    where slide_id = #{slideId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.edu.entity.InfoSlideExample">
+    delete from info_slide
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.edu.entity.InfoSlide">
+    insert into info_slide (slide_id, img_path, con_no, 
+      img_con, comment)
+    values (#{slideId,jdbcType=INTEGER}, #{imgPath,jdbcType=VARCHAR}, #{conNo,jdbcType=VARCHAR}, 
+      #{imgCon,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.edu.entity.InfoSlide">
+    insert into info_slide
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="slideId != null">
+        slide_id,
+      </if>
+      <if test="imgPath != null">
+        img_path,
+      </if>
+      <if test="conNo != null">
+        con_no,
+      </if>
+      <if test="imgCon != null">
+        img_con,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="slideId != null">
+        #{slideId,jdbcType=INTEGER},
+      </if>
+      <if test="imgPath != null">
+        #{imgPath,jdbcType=VARCHAR},
+      </if>
+      <if test="conNo != null">
+        #{conNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgCon != null">
+        #{imgCon,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.edu.entity.InfoSlideExample" resultType="java.lang.Long">
+    select count(*) from info_slide
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update info_slide
+    <set>
+      <if test="record.slideId != null">
+        slide_id = #{record.slideId,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgPath != null">
+        img_path = #{record.imgPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.conNo != null">
+        con_no = #{record.conNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgCon != null">
+        img_con = #{record.imgCon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comment != null">
+        comment = #{record.comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update info_slide
+    set slide_id = #{record.slideId,jdbcType=INTEGER},
+      img_path = #{record.imgPath,jdbcType=VARCHAR},
+      con_no = #{record.conNo,jdbcType=VARCHAR},
+      img_con = #{record.imgCon,jdbcType=VARCHAR},
+      comment = #{record.comment,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.edu.entity.InfoSlide">
+    update info_slide
+    <set>
+      <if test="imgPath != null">
+        img_path = #{imgPath,jdbcType=VARCHAR},
+      </if>
+      <if test="conNo != null">
+        con_no = #{conNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgCon != null">
+        img_con = #{imgCon,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where slide_id = #{slideId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.edu.entity.InfoSlide">
+    update info_slide
+    set img_path = #{imgPath,jdbcType=VARCHAR},
+      con_no = #{conNo,jdbcType=VARCHAR},
+      img_con = #{imgCon,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where slide_id = #{slideId,jdbcType=INTEGER}
+  </update>
+</mapper>
