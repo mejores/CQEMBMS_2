@@ -576,14 +576,21 @@
                     </div>
                     <div class="row">
                         <div class="col-md-2"><label >网页文件<a style="font-size:18px" onclick="upLoadModel.webFileTips()">?</a></label></div>
-                        <div class="col-md-4"><input type="file" class="form-control" id="webfile"></div>
+                        <div class="col-md-4">
+	                        <input type="file" class="form-control" id="webFile">
+	                        <input type="hidden" id="webName">
+                        </div>
                         <div class="col-md-2"><label >附件[可选]</label></div>
-                        <div class="col-md-4"><input type="file" multiple="multiple" class="form-control"></div>
+                        <div class="col-md-4">
+                        	<input type="file" multiple="multiple" class="form-control" id="slaveFile">
+                        	<input type="hidden" id="slavesLogName">
+                        	<input type="hidden" id="slavesPhyName">
+                        	</div>
                     </div>
                     <div class="row" id="upProgress" style="display:none">
                         <div class="col-md-12">
                             <div class="progress" style="height: 5px">
-                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
                                     30%
                                 </div>
                             </div>

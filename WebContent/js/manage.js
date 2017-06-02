@@ -67,14 +67,14 @@ contentModel.load=function(pn){
 			console.log(result);
 			//1、解析并现实信息
 			
-			contentModel.build_table(result.extend.pageInfo.list)
+			contentModel.build_table(result.extend.pageInfo.list);
 			//2、解析并显示分页信息
-			contentModel.build_nav(result.extend.pageInfo)
+			contentModel.build_nav(result.extend.pageInfo);
 			
 			//3、解析并显示分类下拉菜单
 			contentModel.build_select(result.extend.plate)
 		}
-	})
+	});
 }
 
 //选项改变后，重新加载内容，但是不重新加载选项框
@@ -87,13 +87,13 @@ contentModel.loadWithoutSelect=function(pn){
 			console.log(result);
 			//1、解析并现实信息
 			
-			contentModel.build_table(result.extend.pageInfo.list)
+			contentModel.build_table(result.extend.pageInfo.list);
 			//2、解析并显示分页信息
-			contentModel.build_nav(result.extend.pageInfo)
+			contentModel.build_nav(result.extend.pageInfo);
 			
 		
 		}
-	})
+	});
 }
 
 
@@ -110,7 +110,7 @@ contentModel.build_select=function(platelist){
 		//如果选项改变，则改变成员变量selectType的值
 		contentModel.selectType=$("#content select").val();
 		contentModel.loadWithoutSelect(1)
-	})
+	});
 	
 }
 
@@ -185,8 +185,8 @@ contentModel.build_nav=function(pageInfo){
 //编辑消息2
 contentModel.btnEdit=function (obj) {
     var tt= obj.parentNode.parentNode.parentNode;
-    var pp=tt.document.getElementsByTagName("input")
-    alert(pp)
+    var pp=tt.document.getElementsByTagName("input");
+    alert(pp);
 }
 //刷新数据
 contentModel.fresh=function () {
@@ -220,42 +220,40 @@ contentModel.fresh=function () {
 
 
     //文件上传按钮
-	upLoadModel.btnUpLoad=function () {
+	upLoadModel.btnUpLoad=function() {
 		//绑定网页上传事件和附件上传事件
 		//将打开进度条事件移动到附件上传里面
-		$("#upProgress").css("display","block");
+		upLoadModel.uploadWebFile();
+		upLoadModel.uploadSlave();
+		
 	}
 //--------------------------------------------------------------
 	//上传wordWEB文件
-    function uploadWebFile() {
+	upLoadModel.uploadWebFile= function() {
   
-	if($("#webfile").val()==null||$("#webfile").val()==""){layer.msg('网页文件未选择！');}else{
-   // .准备FormData
-        var fd = new FormData();
+	if($("#webFile").val()==null||$("#webFile").val()==""){
+		layer.msg('网页文件未选择！');
+		}else{
+          // .准备FormData
+          var fd = new FormData();
 
-     // 装在web文件
-		fd.append("webfile",webfile.files[0]);
+          // 装在web文件
+		  fd.append("webFile",webfile.files[0]);
 
-    // 创建xhr对象
-        var xhr = new XMLHttpRequest();
-    // 监听状态，实时响应
-    // xhr 和 xhr.upload 都有progress事件，xhr.progress是下载进度，xhr.upload.progress是上传进度
-        xhr.upload.onprogress = function(event) {
+          // 创建xhr对象
+           var xhr = new XMLHttpRequest();
+          // 监听状态，实时响应
+          // xhr 和 xhr.upload 都有progress事件，xhr.progress是下载进度，xhr.upload.progress是上传进度        xhr.upload.onprogress = function(event) {
 	       //如果长度可计算
+           xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
             	//alert("长度可以计算");
                 var percent = Math.round(event.loaded *100 / event.total);
-                
-                //console.log('%d%', percent);
-               // $("#upprog").text(percent+"%");
-            }
-        };
-      // 传输开始事件
-        xhr.onloadstart = function(event) {
-	
-            console.log('load start');
-            $("#upprog").text('开始上传');
 
+            	}
+        	};
+        	// 传输开始事件
+        	xhr.onloadstart = function(event) {
             $("#stopbtn").one('click', function() {
             	//终止当前的网络请求
                 xhr.abort();
@@ -271,11 +269,10 @@ contentModel.fresh=function () {
             console.log(xhr.responseText);
             var ret = JSON.parse(xhr.responseText);
            // alert(ret.retMsg);
-            $("#con_path").val(ret.con_path);
-            $("#con_HTML").val(ret.con_HTML);
+            $("#webName").val(ret.con_path);
+           // $("#con_HTML").val(ret.con_HTML);
             $("#isUploaded").val("yes");
             
-            addToFlist(ret.retMsg,"webfile","webfile");
         };
       // ajax过程发生错误事件
         xhr.onerror = function(event) {
@@ -291,26 +288,26 @@ contentModel.fresh=function () {
         xhr.onloadend = function (event) {
             console.log('load end');
             loading(false);
+            
         };
       // 发起ajax请求传送数据
         xhr.open('POST', 'Upload.do', true);
         xhr.send(fd);
-	   }
-	    if($("#myfile").val()!=null&& $("#myfile").val()!=""){
-		   slaveUpload();
 	   }
         
     }
 
 	 /*-------------------------------------------------------------------------------------------  */
     //上传附件
-	upLoadModel.uploadSlave= function (file) {
-        	if($("#myfile").val()!=null&& $("#myfile").val()!=""){
+	upLoadModel.uploadSlave= function () {
+		//将进度条宽度设置为0
+		$("#upProgress div[role='progressbar']").css("width",0);
+        if($("#slaveFile").val()!=null&& $("#slaveFile").val()!=""){
         // .准备FormData
         var fd = new FormData();
-        var files = document.getElementById("myfile").files;
+        var files = document.getElementById("slaveFile").files;
         for(var i=0; i< files.length; i++){
-        	fd.append("myfile"+i, myfile.files[i]);
+        	fd.append("slaveFile"+i, slaveFile.files[i]);
         } 
      
 
@@ -325,12 +322,14 @@ contentModel.fresh=function () {
                 var percent = Math.round(event.loaded *100 / event.total);
                 //显示上传了进度
                 $("#upprog").text(percent+"%");
+                $("#upProgress div[role='progressbar']").css("width",percent+"%");
             }
         };
      // 传输开始事件
         xhr.onloadstart = function(event) {
             console.log('load start');
-
+            //显示进度条
+            $("#upProgress").css("display","block");
             //终止上传、隐藏上传按钮
             $("#stopbtn").one('click', function() {
             	//终止当前的网络请求
@@ -338,28 +337,31 @@ contentModel.fresh=function () {
                 $(this).hide();
             });
 
-            loading(true);
+            //loading(true);
         };
      // ajax过程成功完成事件
         xhr.onload = function(event) {
-
-            console.log('load success');
-            $("#upprog").text('上传成功');
-            console.log(xhr.responseText);
-           // var ret = JSON.parse(xhr.responseText);
-            
-            //上传成功返回数据
+        	 //上传成功返回数据
             var json=xhr.responseText;
-            json = eval(json);
-            for(var i=0; i<json.length; i++){
-            	if(json[i].retMsg!=null){
-            	addToFlist(json[i].retMsg,json[i].slavePath,"slavefile");
-            	
-            	}
+            json=JSON.parse(json);
+            console.log(json);
+          //doSomething
+            if(json.code=='100'){
+            	//alert("处理成功");
+            	var phy="";
+            	var log="";
+            	$.each(json.extend.res,function(index,obj){
+            		if(index>0){
+            			phy+="|";
+            			log+="|";
+            		}
+            		phy+=obj.phyName;
+            		log+=obj.logName;
+            		
+            	});
+            	$("#slavesPhyName").val(phy);
+            	$("#slavesLogName").val(log);
             }
-           /* addToFlist("[附件]"+ret.retMsg);
-            $("#slave_log").val(ret.retMsg);
-            $("#slave_phi").val(ret.slavePath);*/
             
         };
       // ajax过程发生错误事件
@@ -375,10 +377,10 @@ contentModel.fresh=function () {
       // loadend传输结束，不管成功失败都会被触发
         xhr.onloadend = function (event) {
             console.log('load end');
-            loading(false);
+            //loading(false);
         };
       // 发起ajax请求传送数据
-        xhr.open('POST', 'SlaveUpload.do', true);
+        xhr.open('POST', 'slave/upLoadSlaves', true);
         xhr.send(fd);
        }
         
