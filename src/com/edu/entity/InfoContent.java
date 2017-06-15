@@ -173,5 +173,14 @@ public class InfoContent {
 	public void setSlaves(List<InfoSlave> slaves) {
 		this.slaves = slaves;
 	}
+
+	@Override
+	public String toString() {
+		return "InfoContent [conId=" + conId + ", conNo=" + conNo + ", plateNo=" + plateNo + ", conTitle=" + conTitle
+				+ ", subTitle=" + subTitle + ", author=" + author + ", publisher=" + publisher + ", editor=" + editor
+				+ ", statu=" + statu + ", pubTime=" + pubTime + ", modifyTime=" + modifyTime + ", istop=" + istop
+				+ ", conHtml=" + conHtml + ", conPath=" + conPath + ", visitCount=" + visitCount + ", comment="
+				+ comment + ", slaves=" + slaves + "]";
+	}
     
 }

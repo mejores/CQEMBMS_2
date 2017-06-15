@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <head>
     <meta charset="UTF-8">
@@ -540,51 +540,47 @@
                 <h4 class="modal-title" id="myModalLabel"><span class="badge text-info">添加消息</span></h4>
             </div>
             <div class="modal-body">
-                <form id="login"  class="center-block " style="line-height: 40px">
+                <form id="add-form" method="post"  action="content/addContent" class="center-block " onsubmit="contentModel.btnAdd()" style="line-height: 40px">
                     <div class="row" >
                         <div class="col-md-2"><label >标题</label></div>
-                        <div class="col-md-4"><input type="text" class="form-control"></div>
+                        <div class="col-md-4"><input type="text" class="form-control" name="conTitle"></div>
                         <div class="col-md-2"><label >副标题</label></div>
-                        <div class="col-md-4"><input type="text" class="form-control"></div>
+                        <div class="col-md-4"><input type="text" class="form-control"  name="subTitle"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-2"><label >类型</label></div>
                         <div class="col-md-4"><select class="form-control"
-                                                      name="is4UnifiedStd">
-                            <option value="Y">督导动态</option>
-                            <option value="N">区县新闻</option>
-                            <option value="N">督导报告</option>
-                            <option value="N">督导研究</option>
-                            <option value="N"></option>
+                                                      name="plateNo">
+                            
                         </select></div>
                         <div class="col-md-2"><label >作者</label></div>
-                        <div class="col-md-4"><input type="text" class="form-control"></div>
+                        <div class="col-md-4"><input type="text" class="form-control" name="author"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-2"><label >是否置顶</label></div>
                         <div class="col-md-4"><select class="form-control"
-                                                      name="is4UnifiedStd">
-                            <option value="N">否</option>
-                            <option value="Y">是</option>
+                                                      name="istop">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
                         </select></div>
                         <div class="col-md-2"><label >是否公开</label></div>
                         <div class="col-md-4"><select class="form-control"
-                                                      name="is4UnifiedStd">
-                            <option value="Y">是</option>
-                            <option value="N">否</option>
+                                                      name="statu">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
                         </select></div>
                     </div>
                     <div class="row">
                         <div class="col-md-2"><label >网页文件<a style="font-size:18px" onclick="upLoadModel.webFileTips()">?</a></label></div>
                         <div class="col-md-4">
 	                        <input type="file" class="form-control" id="webFile">
-	                        <input type="hidden" id="webName">
+	                        <input type="hidden" id="conPath" name="conPath">
                         </div>
                         <div class="col-md-2"><label >附件[可选]</label></div>
                         <div class="col-md-4">
                         	<input type="file" multiple="multiple" class="form-control" id="slaveFile">
-                        	<input type="hidden" id="slavesLogName">
-                        	<input type="hidden" id="slavesPhyName">
+                        	<input type="hidden" id="slavesLogName" name="slavesLogName">
+                        	<input type="hidden" id="slavesPhyName" name="slavesPhyName">
                         	</div>
                     </div>
                     <div class="row" id="upProgress" style="display:none">
@@ -603,15 +599,18 @@
                     </div>
                     <div class="row">
                         <div class="col-md-2"><label >备注</label></div>
-                        <div class="col-md-10"><textarea  class="form-control"></textarea></div>
+                        <div class="col-md-10"><textarea  class="form-control" name="comment"></textarea></div>
 
                     </div>
-
+                    <div class="pull-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+				
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
+               
             </div>
         </div>
     </div>

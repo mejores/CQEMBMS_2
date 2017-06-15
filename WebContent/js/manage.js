@@ -14,7 +14,9 @@ var lideModel={};
 //定义上传文件处理模型
 var upLoadModel={};
 
+/**************************************************************************/
 /****************消息处理开始**************************************************/
+/**************************************************************************/
 //添加消息设置
 //$('#addInfo').modal({backdrop:"static",show:true});
 
@@ -104,7 +106,9 @@ contentModel.build_select=function(platelist){
 	//添加选项
 	$("#content select").append('<option value="all" checked>全部类型</option>')
 	$.each(platelist,function(index,plate){
-		$("#content select").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>')
+		$("#content select").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>');
+		//添加消息模态框处的下拉菜单
+		$("#add-form select").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>');
 	})
 	$("#content select").bind("change",function(){
 		//如果选项改变，则改变成员变量selectType的值
@@ -120,7 +124,7 @@ contentModel.build_table=function(list){
 	$("#content_body").empty();
 	$.each(list,function(index,item){
 	
-	    var temp=' <tr > <td><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
+	    var temp=' <tr > <td><input type="hidden" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
          '<td><input name="sub-title" type="text" value="'+item.subTitle+'" class="form-control" readonly  ></td>'+
          '<td><select name="info-plate" class="form-control" disabled>'+
              '<option value="11">督导动态</option>'+
@@ -145,7 +149,7 @@ contentModel.build_table=function(list){
          '<td>'+
              '<div class="btn-group btn-group-sm">'+
                  '<button class="btn btn-primary" onclick="contentModel.btnEdit(this)">修改</button>'+
-                 '<button class="btn btn-primary">删除</button>'+
+                 '<button class="btn btn-primary" name="btn-delete-content">删除</button>'+
              '</div></td>'+
      '</tr>'
              $("#content_body").append(temp);     
@@ -181,6 +185,27 @@ contentModel.build_nav=function(pageInfo){
 	 
 
 }
+//添加消息
+contentModel.btnAdd=function () {
+	var index = layer.load(3);
+}
+//删除消息
+$(document).on("click","button[name='btn-delete-content']",function(){
+	var conNo=$(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
+	//alert($(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val())
+	layer.confirm('确定删除吗?', {icon: 3, title:'删除消息'}, function(index){
+		  //执行删除操纵
+		$.ajax({
+			url:"content/deleteContent/"+conNo,
+			type:"DELETE",
+			success:function(result){
+				layer.msg(result.msg);
+			}
+		})
+		  
+		  layer.close(index);
+		}); 
+})
 
 //编辑消息2
 contentModel.btnEdit=function (obj) {
@@ -237,9 +262,8 @@ contentModel.fresh=function () {
           // .准备FormData
           var fd = new FormData();
 
-          // 装在web文件
-		  fd.append("webFile",webfile.files[0]);
-
+          // 装在web文件,webFile是input的id
+		  fd.append("webfile",webFile.files[0]);
           // 创建xhr对象
            var xhr = new XMLHttpRequest();
           // 监听状态，实时响应
@@ -260,7 +284,7 @@ contentModel.fresh=function () {
                 $(this).hide();
             });
 
-            loading(true);
+            //loading(true);
         };
       // ajax过程成功完成事件
         xhr.onload = function(event) {
@@ -268,8 +292,22 @@ contentModel.fresh=function () {
             $("#upprog").text('上传成功');
             console.log(xhr.responseText);
             var ret = JSON.parse(xhr.responseText);
+            if(ret.code=='100'){
+            	var path= ret.extend.res.phyName;
+            	$("#conPath").val(path);
+            	//layer.tips('上传成功', '#webFile');
+            	layer.tips('网页文件上传成功！', '#webFile', {
+            		  tips: [1, '#3595CC'],
+            		  time: 3000
+            		});
+            }else{
+            	layer.tips('网页文件上传失败！', '#webFile', {
+          		  tips: [1, 'FF3333'],
+          		  time: 3000
+          		});
+            }
            // alert(ret.retMsg);
-            $("#webName").val(ret.con_path);
+            
            // $("#con_HTML").val(ret.con_HTML);
             $("#isUploaded").val("yes");
             
@@ -287,11 +325,11 @@ contentModel.fresh=function () {
       // loadend传输结束，不管成功失败都会被触发
         xhr.onloadend = function (event) {
             console.log('load end');
-            loading(false);
+            //loading(false);
             
         };
       // 发起ajax请求传送数据
-        xhr.open('POST', 'Upload.do', true);
+        xhr.open('POST', 'content/uploadWebFile', true);
         xhr.send(fd);
 	   }
         

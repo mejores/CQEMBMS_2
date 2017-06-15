@@ -38,10 +38,14 @@
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
     </init-param>
+    <!--  <init-param>  
+            <param-name>forceEncoding</param-name>  
+            <param-value>true</param-value>  
+        </init-param> -->
   </filter>
   <filter-mapping>
     <filter-name>CharacterEncodingFilter</filter-name>
-    <servlet-name>DispatcherServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
   
   <!-- 使用rest风格，把页面发过来的请求转为指定的请求 -->

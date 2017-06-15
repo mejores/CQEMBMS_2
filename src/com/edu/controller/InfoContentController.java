@@ -1,20 +1,34 @@
 package com.edu.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.edu.entity.InfoContent;
 import com.edu.entity.InfoContentExample;
 import com.edu.entity.InfoContentExample.Criteria;
+import com.edu.entity.User;
+import com.edu.function.UploadBean;
+import com.edu.service.FileService;
 import com.edu.service.InfoContentService;
 import com.edu.service.InfoPlateService;
 import com.edu.util.JsonWithMsg;
+import com.edu.util.Office2Html;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -27,6 +41,9 @@ public class InfoContentController {
 	
 	@Autowired
 	InfoPlateService infoPlateService;
+	
+	@Autowired
+	FileService fileService;
 	
 	//@RequestMapping("/getAllInfos")
 	//public String getAllInfos(@RequestParam(value="pn",defaultValue="1") Integer pn,
@@ -63,9 +80,46 @@ public class InfoContentController {
 	//上传word文件
 	@RequestMapping("/uploadWebFile")
 	@ResponseBody
-	public JsonWithMsg uploadWebFile(){
-		return JsonWithMsg.success();
+	public JsonWithMsg uploadWebFile(HttpServletRequest request){
+		 UploadBean up= fileService.uploadFIle(request, "webFiles").get(0);
+		return JsonWithMsg.success().add("res", up);
 	}
 	
+	//添加消息
+	@RequestMapping("/addContent")
+	@ResponseBody
+	public JsonWithMsg addContent(HttpServletRequest request,HttpSession session,InfoContent content){
+		
+		
+		//开始word转换成html
+		String basePath=request.getServletContext()
+				.getRealPath("/")+"upload/";
+				System.out.println("对象信息为："+content);
+				String conHtml= new Office2Html().wordToHtml(basePath+"webFiles/"+content.getConPath(), basePath+"htmlFiles/");
+				if(conHtml!=null){
+					
+					User user= (User)session.getAttribute("user");
+					if(user!=null){
+						content.setPublisher(user.getRealName());
+					}
+					
+					content.setConHtml(conHtml);
+					if(infoContentService.addContent(content)>0){
+						return JsonWithMsg.success();
+					}
+					
+				}
+				return JsonWithMsg.fail();
+	}
+	
+	//删除消息
+	@ResponseBody
+	@RequestMapping(value="/deleteContent/{conNo}",method=RequestMethod.DELETE)
+	public JsonWithMsg deleteContent(@PathVariable("conNo")String conNo){
+		if(infoContentService.deleteContentbyConNo(conNo)){
+			return JsonWithMsg.success();
+		}
+		return JsonWithMsg.fail();
+	}
 	
 }
