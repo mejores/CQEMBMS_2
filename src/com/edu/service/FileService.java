@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.springframework.stereotype.Service;
 
+import com.edu.function.ContextPath;
 import com.edu.function.UploadBean;
 import com.edu.util.JsonWithMsg;
 import com.edu.util.MD5Encoder;
@@ -24,9 +25,8 @@ import com.edu.util.MD5Encoder;
 public class FileService {
 
 	//请求与子文件夹名称
-	public List<UploadBean> uploadFIle(HttpServletRequest request,String subDir){
-		StringBuilder savePath=new StringBuilder(request.getServletContext()
-				.getRealPath("/")+"upload/"+subDir);
+	public List<UploadBean> uploadFIle( HttpServletRequest request,String subDir){
+		StringBuilder savePath=new StringBuilder(ContextPath.path+subDir);
 		//String savePath = request.getServletContext().getRealPath("/")+"upload/slaves"; 
 		 File file = new File(savePath.toString());
 		 if(!file.exists()){

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -37,7 +38,19 @@
             vertical-align: middle;
             height: 30px;
         }
+         #slide table tbody td,th{
+           text-align: center;
+            vertical-align: middle;
+            height: 30px;
+        }
         #content table tbody .form-control{
+           padding: 0;
+            margin: 0;
+            text-align: center;
+            border: none;
+            background-color:rgba(255, 255, 255, 0);
+        }
+         #slide table tbody .form-control{
            padding: 0;
             margin: 0;
             text-align: center;
@@ -60,6 +73,16 @@
         #content table tbody .pagination{
             margin: 0;
         }
+         #preview, .img, img  
+		 {  
+		 width:180px;  
+		 height:180px; 
+		
+		 }  
+		 #preview  
+		 {  
+		border:1px solid #000;  
+		}
 
     </style>
     <script src="static/js/jquery-1.11.2.min.js"></script>
@@ -75,15 +98,15 @@
     </div>
     <!--如果使用nav-pills等要占用整行-->
     <ul class="nav navbar-nav pull-right">
-        <li><a href="">欢迎1223984</a></li>
-        <li><a href="">退出</a></li>
+        <li><a href="">欢迎您，${sessionScope.userInfo.userId}</a></li>
+        <li><a href="user/logout">退出</a></li>
         <li><a href="">消息 <span class="badge">10</span></a></li>
     </ul>
 </nav>
 <ul class="nav nav-tabs" style="margin-top: 50px">
-    <li><a href="#content" data-toggle="tab">消息管理</a></li>
+    <li class="active"><a href="#content" data-toggle="tab">消息管理</a></li>
     <li><a href="#slide" data-toggle="tab">轮播图管理</a></li>
-    <li><a href="#user" data-toggle="tab">人员管理</a></li>
+    <li><a href="#user" data-toggle="tab">人员管理<预留></a></li>
 </ul>
 <!--------------导航与内容分割线---------------------------------------------->
 <div class="tab-content" >
@@ -100,7 +123,7 @@
                 </div>
                 <div class="dropdown pull-left" >
 
-					<select class="form-control" >
+					<select class="form-control" name="main">
 						
 					</select>
               <!--       <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -114,12 +137,12 @@
                     </ul> -->
                 </div>
 
-                <form action="" role="form" class="form-inline">
+                <div  role="form" class="form-inline">
                     <div class="form-group">
                         <input type="text" placeholder="搜索" class="form-control">
-                        <button class="btn btn-primary">点击查询</button>
+                        <button class="btn btn-primary" onclick="contentModel.doSearch(this)">点击查询</button>
                     </div>
-                </form>
+                </div>
             </div>
             <table class="table table-bordered table-hover">
                 <thead >
@@ -445,7 +468,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="btn-group pull-left btn-toolbar ">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#addInfo">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal-addSlide" id="addSlide">
                         <span class="glyphicon glyphicon-plus"></span>添加</button>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#editSlide">
                         <span class="glyphicon glyphicon-pencil"></span>修改</button>
@@ -472,8 +495,8 @@
 
                 </tr>
                 </thead>
-                <tbody>
-                <tr id="111" onclick="choose(this)">
+                <tbody id="slide_body">
+                <tr>
 
                     <td>渝北区到广西自治区调研</td>
                     <td>毕福剑</td>
@@ -486,20 +509,21 @@
                         </div></td>
                 </tr>
 
+                </tbody>
+            </table>
+                       <!-- 导航 -->
+             <div class="row text-center">
+                            <div class="col-md-5 " style="margin-top: 25px" id="slide-pageinfo">
+                               	当前第 1页
+                                		共500条记录
 
+                            </div>
+                            <div class="col-md-1 " style="margin-top: 25px">
 
-
-
-                <tr>
-                    <!--合并的单元-->
-                    <td colspan="12">
-                        <div class="row text-center">
-                            <div class="col-md-6 " style="margin-top: 30px">
-                                <span >当前第1页</span>
-                                <span >共500条记录</span>
+                                <a class="pull-right"onclick="contentModel.fresh()"><span class="glyphicon glyphicon-refresh"></span></a>
                             </div>
                             <div class="col-md-6">
-                                <ul class="pagination">
+                                <ul class="pagination" id="slide-pagenavbar">
                                     <li><a href="">首页</a></li>
                                     <li><a href="">1</a></li>
                                     <li><a href="">2</a></li>
@@ -512,11 +536,7 @@
                                 </ul>
                             </div>
                         </div>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            
         </div>
     </div>
     <!--预留，人员管理-->
@@ -617,20 +637,74 @@
 </div>
 
 
-<!--修改轮播图模态框-->
-<div class="modal fade" id="editSlide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!--添加轮播图模态框-->
+<div class="modal fade" id="modal-addSlide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" ><span class="badge text-info">修改轮播图</span></h4>
+                <h4 class="modal-title" ><span class="badge text-info">添加轮播图</span></h4>
             </div>
             <div class="modal-body">
-                ...
+            <div class="center-block " onsubmit="contentModel.btnAdd()" style="line-height: 40px">
+            	
+                <div class="row">
+                        <div class="col-md-2"><label >消息说明</label></div>
+                        <div class="col-md-4"><input type="text" class="form-control"
+                                                      name="imgCon" readonly></div>
+                        <div class="col-md-3"><label>与消息标题一致</label></div>
+                        <div class="col-md-1"><input class="form-control" name="LinkToInfo" type="checkbox" checked onclick="slideModel.linkToInfo(this)"></div>
+                    </div>
+                <div class="row">
+            		<div class="col-md-2"><label >消息图片</label></div>
+            		<div class="col-md-4">
+            		<input class="form-control" type="file" id="addPicFile" onchange="slideModel.picPreview(this)"
+            		 accept="image/gif,image/jpeg,image/x-png"/></div>
+            		 <div class="col-md-2"><label>备注</label></div>
+            		 <div class="col-md-4">
+            		   <input class="form-control" type="text" name="comment">
+            		 </div>
+            	</div>
+            	<div class="row">
+            		<!--可关联消息列表  -->
+            		<div class="col-md-8">
+            		<table class="table table-bordered table-hover">
+            			<thead>
+            				<tr>
+            				<th>消息标题</th>
+            				<th>是否公开</th>
+            				</tr>
+            			</thead>
+            			<tbody>
+            				
+            			</tbody>
+            		</table>
+            		</div>
+            		<div class="col-md-4">
+            		  <!--图片预览框  -->
+            		  <div><span style="font-size:20px;color:#FF7F50" class="glyphicon glyphicon-hand-left"></span>&nbsp要关联的消息</div>
+            		  <div id="preview" class="pull-right"></div>
+            		
+            	</div>
+            	</div>
+            	<div class="row ">
+            	  <div class="col-md-9 col-md-offset-2">
+                      <ul class="pagination" style="padding:0;margin:0" id="addSlide-pagenavbar">
+                          <li><a href="">首页</a></li>
+                          <li><a href="">1</a></li>
+                          <li><a href="">2</a></li>
+                          <li><a href="">3</a></li>
+                          <li><a href="">4</a></li>
+                          <li><a href="">5</a></li>
+                          <li><a href="">尾页</a></li>
+                      </ul>
+                      </div>
+            	</div>
+            </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-primary" name="commit" onclick="slideModel.addSlide()">保存</button>
             </div>
         </div>
     </div>

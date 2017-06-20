@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
  <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+ 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -18,14 +19,15 @@
 <link href="static/css/global.css" rel="stylesheet" type="text/css">
 <link href="static/css/main.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="favicon.ico">
-<script type="text/javascript" src="js/lib/jquery.min.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 
-<c:if test="${requestScope.infolist12==null }">
+<%-- <c:if test="${requestScope.infolist12==null }">
 	<script type="text/javascript">
-	location.href="pageLado.do";
+	location.href="content/getAllInfosToRequest";
 	</script>
 </c:if>
-
+ --%>
 </head>
 <body >
 
@@ -53,7 +55,6 @@
 		</div>
 	</div>
 	<!-- 公共顶部结束 -->
-
 
 	<!-- 首页：各板块内容开始 -->
 	<div class="container bulk-content">
@@ -143,20 +144,8 @@
 						<h3>督导动态</h3>
 						<a href="listLoad.do?plate=12">更多>></a>
 					</div>
-					<ul class="list-unstyled list-article list-with-date">
-					<c:forEach var="info" items="${requestScope.infolist12}">
-						<li>
-							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
-									<span style="color:red">[置顶]</span>
-                                </c:if>
-								${info.con_title}</a>
-							</div> <span class="date">${fn:substring(info.pub_time,0,10)}</span>
-							<%-- <c:out value="${fn:substring(info.pub_time,0,10)}"/> --%>
-							</li>
-						
-						</c:forEach>
+					<ul class="list-unstyled list-article list-with-date" id="infolist12">
+					
 					</ul>
 					
 				</div>
@@ -171,19 +160,19 @@
 							<h3>区县信息</h3>
 							<a href="listLoad.do?plate=21">更多>></a>
 						</div>
-						<ul class="list-unstyled list-article">
-						<c:forEach var="info" items="${requestScope.infolist21}">
+						<ul class="list-unstyled list-article"  id="infolist21">
+						<%-- <c:forEach var="info" items="${requestScope.infolist21}">
 							<li>
 							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
+								<a href="detailLoad.do?urlstring=${info.conId}">
+								<c:if test="${info.istop==1 }">
 									<span style="color:red">[置顶]</span>
                                 </c:if>
-								${info.con_title}</a>
+								${info.conTitle}</a>
 							</div> 
 							</li>
 						
-						</c:forEach>
+						</c:forEach> --%>
 						</ul>
 					</div>
 				</div>
@@ -193,19 +182,8 @@
 							<h3>督导报告</h3>
 							<a href="listLoad.do?plate=22">更多>></a>
 						</div>
-						<ul class="list-unstyled list-article">
-							<c:forEach var="info" items="${requestScope.infolist22}">
-							<li>
-							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
-									<span style="color:red">[置顶]</span>
-                                </c:if>
-								${info.con_title}</a>
-							</div> 
-							</li>
-						
-						</c:forEach>
+						<ul class="list-unstyled list-article" id="infolist22">
+							
 						</ul>
 					</div>
 				</div>
@@ -216,19 +194,8 @@
 						<h3>督导研究</h3>
 						<a href="listLoad.do?plate=23">更多>></a>
 					</div>
-					<ul class="list-unstyled list-article">
-						<c:forEach var="info" items="${requestScope.infolist23}">
-							<li>
-							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
-									<span style="color:red">[置顶]</span>
-                                </c:if>
-								${info.con_title}</a>
-							</div> 
-							</li>
+					<ul class="list-unstyled list-article" id="infolist23">
 						
-						</c:forEach>
 					</ul>
 				</div>
 			</div>
@@ -257,19 +224,8 @@
 							<h3>组织机构</h3>
 							<a href="listLoad.do?plate=31">更多>></a>
 						</div>
-						<ul class="list-unstyled list-article">
-							<c:forEach var="info" items="${requestScope.infolist31}">
-							<li>
-							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
-									<span style="color:red">[置顶]</span>
-                                </c:if>
-								${info.con_title}</a>
-							</div> 
-							</li>
-						
-						</c:forEach>
+						<ul class="list-unstyled list-article" id="infolist31">
+							
 						</ul>
 					</div>
 				</div>
@@ -279,19 +235,8 @@
 							<h3>政策法规</h3>
 							<a href="listLoad.do?plate=32">更多>></a>
 						</div>
-						<ul class="list-unstyled list-article">
-							<c:forEach var="info" items="${requestScope.infolist32}">
-							<li>
-							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}">
-								<c:if test="${info.isTop==1 }">
-									<span style="color:red">[置顶]</span>
-                                </c:if>
-								${info.con_title}</a>
-							</div> 
-							</li>
-						
-						</c:forEach>
+						<ul class="list-unstyled list-article" id="infolist33">
+							
 						</ul>
 					</div>
 				</div>

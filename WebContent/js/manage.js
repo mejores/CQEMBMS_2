@@ -2,14 +2,21 @@
  * Created by joven on 2017/5/16.
  */
 $(function(){
+	//获取消息数据
 	contentModel.load(1);
+	//获取轮播图数据
+	slideModel.load(1);
+	//当添加图片模态框打开的时候
+	$('#modal-addSlide').on('shown.bs.modal', function (e) {
+		  slideModel.loadInfoList();
+		})
 })
 
 //定义消息处理模型
 var contentModel={};
 
 //定义轮播图处理模型
-var lideModel={};
+var slideModel={};
 
 //定义上传文件处理模型
 var upLoadModel={};
@@ -69,7 +76,7 @@ contentModel.load=function(pn){
 			console.log(result);
 			//1、解析并现实信息
 			
-			contentModel.build_table(result.extend.pageInfo.list);
+			contentModel.build_table(result.extend.pageInfo.list,result.extend.plate);
 			//2、解析并显示分页信息
 			contentModel.build_nav(result.extend.pageInfo);
 			
@@ -89,7 +96,7 @@ contentModel.loadWithoutSelect=function(pn){
 			console.log(result);
 			//1、解析并现实信息
 			
-			contentModel.build_table(result.extend.pageInfo.list);
+			contentModel.build_table(result.extend.pageInfo.list,result.extend.plate);
 			//2、解析并显示分页信息
 			contentModel.build_nav(result.extend.pageInfo);
 			
@@ -102,61 +109,64 @@ contentModel.loadWithoutSelect=function(pn){
 //？先查出所有分类
 //构建消息列表下拉菜单
 contentModel.build_select=function(platelist){
-	$("#content select").empty();
+	$("#content select[name='main']").empty();
 	//添加选项
-	$("#content select").append('<option value="all" checked>全部类型</option>')
+	$("#content select[name='main']").append('<option value="all" checked>全部类型</option>')
 	$.each(platelist,function(index,plate){
-		$("#content select").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>');
+		$("#content select[name='main']").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>');
 		//添加消息模态框处的下拉菜单
 		$("#add-form select").append('<option value="'+plate.plateNo+'">'+plate.plateName+'</option>');
 	})
-	$("#content select").bind("change",function(){
+	$("#content select[name='main']").bind("change",function(){
 		//如果选项改变，则改变成员变量selectType的值
-		contentModel.selectType=$("#content select").val();
+		contentModel.selectType=$("#content select[name='main']").val();
 		contentModel.loadWithoutSelect(1)
 	});
 	
 }
 
 //构建消息列表
-contentModel.build_table=function(list){
+contentModel.build_table=function(infolist,platelist){
 	
 	$("#content_body").empty();
-	$.each(list,function(index,item){
+	var plateTemp='<select class="form-control" name="info-select" disabled>'
+	$.each(platelist,function(index,plate){
+		//
+		plateTemp+='<option value="'+plate.plateNo+'">'+plate.plateName+'</option>';
+	})
+	plateTemp+='</select>';
+	$.each(infolist,function(index,item){
 	
-	    var temp=' <tr > <td><input type="hidden" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
+	    var infoTemp=' <tr > <td><input type="hidden" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
          '<td><input name="sub-title" type="text" value="'+item.subTitle+'" class="form-control" readonly  ></td>'+
-         '<td><select name="info-plate" class="form-control" disabled>'+
-             '<option value="11">督导动态</option>'+
-             '<option value="21">督导研究</option>'+
-             '<option value="22">区县动态</option>'+
-             '<option value="23">督导动态</option>'+
-         '</select></td>'+
+         '<td>'+plateTemp+'</td>'+
          '<td><input name="info-author" type="text" value="'+item.author+'" class="form-control" readonly style="width: 100px"></td>'+
          '<td >'+item.publisher+'</td>'+
          '<td>'+item.editor+'</td>'+
          '<td>'+item.modifyTime+'</td>'+
          '<td>'+item.pubTime+'</td>'+
          '<td><div class="checkbox">'+
-             '<label><input type="checkbox" disabled></label>'+
+             '<label><input type="checkbox" disabled checked="'+(item.istop=="1"?true:false)+'"></label>'+
          '</div></td>'+
          '<td><div class="checkbox">'+
-             '<label><input type="checkbox" value="" checked disabled></label>'+
+             '<label><input type="checkbox" value="" #{statu} disabled></label>'+
          '</div>'+
          '</td>'+
          '<td>36</td>'+
          '<td><a href="">查看附件</a></td>'+
          '<td>'+
              '<div class="btn-group btn-group-sm">'+
-                 '<button class="btn btn-primary" onclick="contentModel.btnEdit(this)">修改</button>'+
+                 '<button class="btn btn-primary" name="btn-edit-content">修改</button>'+
                  '<button class="btn btn-primary" name="btn-delete-content">删除</button>'+
              '</div></td>'+
-     '</tr>'
-             $("#content_body").append(temp);     
+     '</tr>';
+	    //temp=temp.replace("#{statu}",item.statu=="1"?checked:"")
+             $("#content_body").append(infoTemp);
+             $("tbody select[name='info-select']").last().val(item.plateNo)
 	});
 }
 
-//构建分页信息
+//构建消息分页信息
 contentModel.build_nav=function(pageInfo){
 	$("#pageinfo").html("当前第"+pageInfo.pageNum+"页,共"+pageInfo.pages+"页，共"+pageInfo.total+"条记录");
 	$("#pagenavbar").empty();
@@ -191,6 +201,7 @@ contentModel.btnAdd=function () {
 }
 //删除消息
 $(document).on("click","button[name='btn-delete-content']",function(){
+	if($(this).text()=="删除"){
 	var conNo=$(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
 	//alert($(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val())
 	layer.confirm('确定删除吗?', {icon: 3, title:'删除消息'}, function(index){
@@ -205,19 +216,83 @@ $(document).on("click","button[name='btn-delete-content']",function(){
 		  
 		  layer.close(index);
 		}); 
+	}else{//如果为撤销功能
+		$(this).text("删除");
+		$(this).prev("button").text("修改");
+		$(this).parents("tr").find("input").attr("readonly", true);
+		$(this).parents("tr").find("select").attr("disabled", true);
+		$(this).parents("tr").find("input").css("background-color", "rgba(255, 255, 255, 0)");
+		$(this).parents("tr").find("select").css("background-color", "rgba(255, 255, 255, 0)");
+	}
 })
 
+//点击修改按钮过后，打开编辑状态
+$(document).on("click","button[name='btn-edit-content']",function(){
+	if($(this).text()=="修改"){
+		$(this).text("保存");
+		$(this).siblings("button").text("撤销");
+		$(this).parents("tr").find("input").attr("readonly", false);
+		$(this).parents("tr").find("select").attr("disabled", false);
+		$(this).parents("tr").find("input").css("background-color", "#C0FF3E");
+		$(this).parents("tr").find("select").css("background-color", "#C0FF3E");
+	}else{
+		//执行修改操作
+		contentModel.editContent(this);
+		layer.msg("即将保存！");
+	}
+	
+	
+})
+
+contentModel.editContent=function(obj){
+	var parent=$(obj).parents("tr");
+	//
+	var infoTitle=$(parent).find("input[name='info-title']").val();
+	var subTitle=$(parent).find("input[name='sub-title']").val();
+	var infoAuthor=$(parent).find("input[name='info-author']").val();
+	var infoSelect=$(parent).find("input[name='info-select']").val();
+	//alert(infoTitle);
+	var data={"conTitle":infoTitle,"subTitle":subTitle,"author":infoAuthor,"plateNo":infoSelect}
+	//ajax
+}
+
 //编辑消息2
-contentModel.btnEdit=function (obj) {
+/*contentModel.btnEdit=function (obj) {
     var tt= obj.parentNode.parentNode.parentNode;
     var pp=tt.document.getElementsByTagName("input");
     alert(pp);
+}*/
+
+//消息查找
+contentModel.doSearch=function(obj){
+	/*
+	$.ajax({
+		url:"content/getAllInfos",
+		data:{"pn":"1","type":contentModel.selectType,"contentsForSearch":contentsForSearch},
+		type:"get",
+		success:function(result){
+			console.log(result);
+			//1、解析并现实信息
+			
+			contentModel.build_table(result.extend.pageInfo.list,result.extend.plate);
+			//2、解析并显示分页信息
+			contentModel.build_nav(result.extend.pageInfo);
+			
+		
+		}
+	});*/
 }
+
 //刷新数据
 contentModel.fresh=function () {
         var index = layer.load(2, {time: 10*1000});
         contentModel.load(1);
     }
+
+//查看附件
+contentModel.showSlaves=function(){
+	
+}
 
 
 /******************************************************************************/
@@ -228,6 +303,210 @@ contentModel.fresh=function () {
 /******************************************************************************/
 /********************轮播图处理开始**********************************************/
 /******************************************************************************/
+
+
+$("#addSlide").on('click',function(){
+	console.log("boot")
+})
+//获取轮播图列表数据
+slideModel.load=function(pn){
+	$.ajax({
+		url:"slide/getAll",
+		data:{"pn":pn},
+		type:"get",
+		success:function(result){
+			console.log(result);
+			//1、解析并现实信息
+			
+			slideModel.build_table(result.extend.pageInfo.list);
+			//2、解析并显示分页信息
+			slideModel.build_nav(result.extend.pageInfo);
+
+		}
+	});
+}
+
+
+//构建轮播图列表
+slideModel.build_table=function(list){
+
+	$("#slide_body").empty();
+	$.each(list,function(index,item){
+	if(item.comment==null){
+		item.comment="无";
+	}
+	    var temp=' <tr > <td><input type="hidden" value="'+item.slideId+'"><input name="imgCon" type="text"  value="'+item.imgCon+'" class="form-control" readonly ></td>'+
+         '<td><input name="conNO" type="text" value="'+item.conNo+'" class="form-control" readonly  ></td>'+
+         '<td><input name="comment" type="text" value="'+item.comment+'" class="form-control" readonly  ></td>'+
+         '<td>'+
+             '<div class="btn-group btn-group-sm">'+
+                 '<button class="btn btn-primary" onclick="contentModel.btnEdit(this)">修改</button>'+
+                 '<button class="btn btn-primary" name="btn-delete-slide">删除</button>'+
+             '</div></td>'+
+     '</tr>'
+             $("#slide_body").append(temp);     
+	});
+}
+
+
+//构建轮播图分页信息
+slideModel.build_nav=function(pageInfo){
+	$("#slide-pageinfo").html("当前第"+pageInfo.pageNum+"页,共"+pageInfo.pages+"页，共"+pageInfo.total+"条记录");
+	$("#slide-pagenavbar").empty();
+	
+	if(pageInfo.hasPreviousPage){
+		$("#slide-pagenavbar").append('<li><a onclick="slideModel.load(1)">首页</a></li>');
+		$("#slide-pagenavbar").append(' <li><a onclick="slideModel.load('+pageInfo.pageNum +'-1)"><<<</a></li>');
+	}else{
+		$("#slide-pagenavbar").append('<li class="disabled"><a href="#">首页</a></li>');
+	}
+	$.each(pageInfo.navigatepageNums,function(index,page_Num){
+		if(page_Num==pageInfo.pageNum){
+			$("#slide-pagenavbar").append('<li  class="active"><a href="#" > '+page_Num+'</a></li>')
+			
+		}else{
+			$("#slide-pagenavbar").append('<li><a onclick="slideModel.load('+page_Num+')"> '+page_Num+'</a></li>')
+		}
+	});
+	
+	if(pageInfo.hasNextPage){ 
+		$("#slide-pagenavbar").append(' <li><a onclick="slideModel.load('+pageInfo.pageNum +'+1)"> >>> </a></li>');
+		$("#slide-pagenavbar").append('<li><a onclick="slideModel.load('+pageInfo.lastPage+')">末页</a></li>');
+	}else{
+		$("#slide-pagenavbar").append('<li class="disabled"><a href="#" >末页</a></li>');
+	}
+	 
+
+}
+
+
+//与消息标题一致选中状态的变化
+slideModel.linkToInfo=function(obj){
+	if(obj.checked==false){
+		$("#modal-addSlide input[name='imgCon']").attr("readonly",false);
+	}else{
+		$("#modal-addSlide input[name='imgCon']").attr("readonly",true);
+	}
+}
+
+//提交要添加的轮播图片
+//$(document).on("click","#modal-addSlide button[name='commit']","slideModel.upLoadImg");
+
+slideModel.btnAddSlide=function(){
+	
+}
+//添加轮播图
+slideModel.addSlide=function(){
+	//$("#addPicFile")
+	var f=$("#addPicFile").val()
+	 if(f==null||f==""){layer.msg("请选择要上传的图片！");}else{
+		 if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(f))
+	        {
+
+			 layer.msg("图片类型必须是.gif,jpeg,jpg,png中的一种")
+	         // return false;
+	        }else{	
+	 //如果已经选中与之关联的消息
+	 if(slideModel.checkedConNo!=null){
+			// .准备FormData
+	        var picfd = new FormData();
+	        var imgCon=$("#modal-addSlide input[name='imgCon']").val();
+			 var comment=$("#modal-addSlide input[name='comment']").val();
+			picfd.append("picfile",addPicFile.files[0]);
+			picfd.append("conNo",slideModel.checkedConNo);
+			picfd.append("imgCon",imgCon);
+			picfd.append("comment",comment);
+		
+		  $.ajax({
+				url:'slide/addSlide',
+				method:'post',
+				contentType:"multipart/form-data",   
+				type:"POST",  
+				data:picfd,    
+				processData: false,  // 告诉jQuery不要去处理发送的数据  
+				contentType: false,   // 告诉jQuery不要去设置Content-Type请求头 
+				success:function(result){
+						layer.msg(result.msg);}
+			});  
+	
+		}
+	 else{
+		layer.msg("请选择要关联的消息！");
+	 }
+	 }
+	 }
+}
+
+//删除轮播图
+$(document).on("click","button[name='btn-delete-slide']",function(){
+	var slideId=$(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
+	//alert($(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val())
+	layer.confirm('确定删除吗?', {icon: 3, title:'删除消息'}, function(index){
+		  //执行删除操纵
+		$.ajax({
+			url:"slide/deleteBySlideId/"+slideId,
+			type:"DELETE",
+			success:function(result){
+				layer.msg(result.msg);
+			}
+		})
+		  
+		  layer.close(index);
+		}); 
+})
+
+//加载可关联的消息列表
+slideModel.loadInfoList=function(pn){
+	if(pn==null){
+		pn=1;
+	}
+	$.ajax({
+		url:"content/getAllInfos",
+		data:{"pn":pn,"type":"12"},
+		type:"get",
+		success:function(result){
+			//1、解析并现实信息
+			$("#modal-addSlide tbody").empty();
+			var infoList=result.extend.pageInfo.list;
+			$.each(infoList,function(index,obj){
+				if(obj.conTitle.length>20){
+					obj.conTitle=obj.conTitle.substring(0,18)+"..."
+				}
+				$("#modal-addSlide tbody").append('<tr><td><input type="hidden" value="'+obj.conNo+'"/>'+obj.conTitle+'</td><td>'+(obj.statu=="1"?"是":"否")+'</td></tr>');
+			});
+			//点击关联消息-轮播图添加
+			$(document).on("click","#modal-addSlide tr",function(){
+				var conNo=$(this).find("td:eq(0)").find("input[type='hidden']").val();
+				var conTitle=$(this).find("td:eq(0)").text()
+				$("input[name='imgCon']").val(conTitle);
+				slideModel.checkedConNo=conNo;
+				//alert(conNo+"---"+conTitle)
+			})
+			
+			
+		}
+	})
+}
+
+
+
+//图片预览
+slideModel.picPreview=function(file){
+	//$("#addPicFile")
+	 var prevDiv = document.getElementById('preview');  
+	 if (file.files && file.files[0])  
+	 {  
+	 var reader = new FileReader();  
+	 reader.onload = function(evt){  
+	 prevDiv.innerHTML = '<img src="' + evt.target.result + '" />';  
+	}    
+	 reader.readAsDataURL(file.files[0]);  
+	}  
+	 else    
+	 {  
+	 prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';  
+	 }
+}
 
 /******************************************************************************/
 /********************轮播图处理结束**********************************************/

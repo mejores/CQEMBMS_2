@@ -18,7 +18,7 @@
     <link href="static/css/main.css" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="favicon.ico">
     <script>
-   
+    
     //var $current = $("#article-id");
     //$current.find("img")
     //$("#article-id").children("img").each(function(){

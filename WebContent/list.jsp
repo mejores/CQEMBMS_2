@@ -1,82 +1,83 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
+    pageEncoding="UTF-8"%>    
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
  <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <%pageContext.setAttribute("basePath", request.getContextPath()); %>
+<!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <title>列表页 - 重庆教育督导网</title>
     <meta name="keywords" content="重庆教育督导，重庆市政府教育督导室">
     <meta name="description" content="重庆教育督导网，重庆市政府教育督导室主办。">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="static/css/global.css" rel="stylesheet" type="text/css">
-    <link href="static/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="favicon.ico">
+    <link href="${basePath}/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="${basePath}/static/css/global.css" rel="stylesheet" type="text/css">
+    <link href="${basePath}/static/css/main.css" rel="stylesheet" type="text/css">
+    <link rel="${basePath}/shortcut icon" href="favicon.ico">
+    <script type="text/javascript" src="${basePath}/static/js/jquery-1.11.2.min.js"></script>
 </head>
 <body>
 <!-- 公共顶部开始 -->
 <div id="bg-top" class="bgt-hide2">
-    <div id="bg-top-ct" data-bgnum="1" style="background-image:url(static/images/bg-top0.jpg);"><!-- data-bgnum为切换数量  --></div>
+    <div id="bg-top-ct" data-bgnum="1" style="background-image:url(${basePath}/static/images/bg-top0.jpg);"><!-- data-bgnum为切换数量  --></div>
     <div id="head">
         <div id="nav">
             <div class="nav-list">
                 <ul>
-                    <li><a href="index.jsp">首页</a></li>
+                    <li><a href="../index.jsp">首页</a></li>
                     <c:if test="${requestScope.plate=='12'}">
                      <li class="active"><a href="#">督导动态</a></li>
-                    <li><a href="listLoad.do?plate=21">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+                    <li><a href="loadList?plate=21">区县信息</a></li>
+                    <li><a href="loadList?plate=22">督导报告</a></li>
+                    <li><a href="loadList?plate=23">督导研究</a></li>
+                    <li><a href="loadList?plate=31">组织机构</a></li>
+                    <li><a href="loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
                     <c:if test="${requestScope.plate=='21'}">
-                     <li><a href="listLoad.do?plate=12">督导动态</a></li>
+                     <li><a href="loadList?plate=12">督导动态</a></li>
                     <li class="active"><a href="#">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+                    <li><a href="loadList?plate=22">督导报告</a></li>
+                    <li><a href="loadList?plate=23">督导研究</a></li>
+                    <li><a href="loadList?plate=31">组织机构</a></li>
+                    <li><a href="loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
                    <c:if test="${requestScope.plate=='22'}">
-                     <li><a href="listLoad.do?plate=12">督导动态</a></li>
-                    <li ><a href="listLoad.do?plate=21">区县信息</a></li>
+                     <li><a href="loadList?plate=12">督导动态</a></li>
+                    <li ><a href="loadList?plate=21">区县信息</a></li>
                     <li class="active"><a href="#">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+                    <li><a href="loadList?plate=23">督导研究</a></li>
+                    <li><a href="loadList?plate=31">组织机构</a></li>
+                    <li><a href="loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
                    <c:if test="${requestScope.plate=='23'}">
-                     <li><a href="listLoad.do?plate=12">督导动态</a></li>
-                    <li><a href="listLoad.do?plate=21">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
+                     <li><a href="loadList?plate=12">督导动态</a></li>
+                    <li><a href="loadList?plate=21">区县信息</a></li>
+                    <li><a href="loadList?plate=22">督导报告</a></li>
                     <li  class="active"><a href="#">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+                    <li><a href="loadList?plate=31">组织机构</a></li>
+                    <li><a href="loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
                    <c:if test="${requestScope.plate=='31'}">
-                     <li><a href="listLoad.do?plate=12">督导动态</a></li>
-                    <li><a href="listLoad.do?plate=21">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
+                     <li><a href="loadList?plate=12">督导动态</a></li>
+                    <li><a href="loadList?plate=21">区县信息</a></li>
+                    <li><a href="loadList?plate=22">督导报告</a></li>
+                    <li><a href="loadList?plate=23">督导研究</a></li>
                     <li  class="active"><a href="#">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+                    <li><a href="loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
                    <c:if test="${requestScope.plate=='32'}">
-                     <li><a href="listLoad.do?plate=12">督导动态</a></li>
-                    <li><a href="listLoad.do?plate=21">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
+                     <li><a href="loadList?plate=12">督导动态</a></li>
+                    <li><a href="loadList?plate=21">区县信息</a></li>
+                    <li><a href="loadList?plate=22">督导报告</a></li>
+                    <li><a href="loadList?plate=23">督导研究</a></li>
+                    <li><a href="loadList?plate=31">组织机构</a></li>
                     <li  class="active"><a href="#">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
                    </c:if>
@@ -167,7 +168,7 @@
 						<li>
 							<div class="article-title">
 								<a href="detailLoad.do?urlstring=${hotNews.con_id}&&">
-								${hotNews.con_title}</a>	</div>
+								${hotNews.conTitle}</a>	</div>
 							</li>
 						</c:forEach>
                 </ul>
@@ -206,15 +207,15 @@
                 <ul class="list-article list-with-date">
                 
                 
-                <c:forEach var="info" items="${requestScope.infolist}">
+                <c:forEach var="info" items="${requestScope.infolist.list}">
 						<li>
 							<div class="article-title">
-								<a href="detailLoad.do?urlstring=${info.con_id}&&">
-								<c:if test="${info.isTop==1 }">
+								<a href="detailLoad.do?urlstring=${info.conId}&&">
+								<c:if test="${info.istop==1 }">
 									[置顶]
                                 </c:if>
-								${info.con_title}</a>
-							</div> <span class="date">${fn:substring(info.pub_time,0,10)}</span>
+								${info.conTitle}</a>
+							</div> <span class="date">${fn:substring(info.pubTime,0,10)}</span>
 							<%-- <c:out value="${fn:substring(info.pub_time,0,10)}"/> --%>
 							</li>
 						
@@ -223,59 +224,33 @@
                 </ul>
                 <!-- 分页信息 -->
                 <div class="pagination-box">
-                    <span class="info">共<span class="total">${requestScope.rowCount}</span>条，每页<span class="per">20</span>条，分<span class="pages">${requestScope.pageCount}</span>页显示</span>
+                    <span class="info">共<span class="total">${requestScope.infolist.total}</span>条，每页<span class="per">20</span>条，分<span class="pages">${requestScope.infolist.pages}</span>页显示</span>
                     <ul class="pagination">
-                           <c:if test="${requestScope.toPage!=1}">
-                        <li >
-                           <!--  <span><<</span> -->
-                            <a href="listLoad.do?plate=${requestScope.plate}&&toPage=${requestScope.toPage-1}"><<<</a>
+                     <c:if test="${pageInfo.hasPreviousPage}">
+                         <li >
+                         <li><a href="loadList?plate=${plate}&&pn=1">首页</a></li>
+                            <a href="loadList?plate=${plate}&&pn=${pageInfo.pageNum-1}"><<<</a>
                         </li>
-                        </c:if>
-                        <c:if test="${requestScope.toPage==1}">
-                        <li class="disabled">
-							<span><<</span> 
-                        </li>
-                        </c:if>
-                        <c:set var="sta" scope="page" value="1"/>
-                        <c:set var="endd" scope="page" value="${requestScope.pageCount}"/>
-                        <!--如果总页面大于8个或者总页面减去当前页面大于8  -->
-                         <c:if test="${requestScope.pageCount>8||(requestScope.pageCount-requestScope.toPage)>8}">
-                        	<!--如果当前页大于3  -->
-                        	<c:if test="${requestScope.toPage>3}">
-                        		<c:set var="sta" scope="page" value="${requestScope.toPage-2}"/>
-                        	</c:if>
-                        	<!--如果当前页小于总页面减4  -->
-                         	<c:if test="${requestScope.toPage<(requestScope.pageCount-4)}">
-                        		<c:set var="endd" scope="page" value="${requestScope.toPage+5}"/>
-                        	</c:if>
-                        </c:if> 
-                        <c:forEach var="j" begin="${sta}" end="${endd}">
-                      
-                         <c:choose>
-                           <c:when test="${j==requestScope.toPage}">
-                        	<li class="active">
-                            <span>${j}</span>
-                            </li>
-                        </c:when>
-                         <c:otherwise>
-                         <li>
-                            <a href="listLoad.do?plate=${requestScope.plate}&&toPage=${j}">${j}</a>
-                        </li>
-                        </c:otherwise>
-                        </c:choose>
+                     </c:if>
+					
+					  <c:forEach items="${requestScope.infolist.navigatepageNums}" var="page_Num">
+                            <!-- 如果遍历出来的页面是当前页面 -->
+                            <c:if test="${page_Num==requestScope.infolist.pageNum }">
+                            <li  class="active"><a href="#"> ${page_Num}</a></li>
+                            </c:if>
+                            <!-- 如果不是 -->
+                            <c:if test="${page_Num!=requestScope.infolist.pageNum }">
+                            <li><a href="loadList?plate=${plate}&&pn=${page_Num}"> ${page_Num}</a></li>
+                            </c:if>
+                       </c:forEach>
+                       
+                       <c:if test="${infolist.hasNextPage}">
+                            <li><a href="loadList?plate=${plate}&&pn=${pageInfo.pageNum+1}">>>></a></li>
+                            <li><a href="loadList?plate=${plate}&&pn=${pageInfo.pages}">尾页</a></li>
+                         </c:if>
 						
-					</c:forEach>
-                          <c:if test="${requestScope.toPage!=requestScope.pageCount}">
-                        <li >
-                            <a href="listLoad.do?plate=${requestScope.plate}&&toPage=${requestScope.toPage+1}">>>></a>
-                        </li>
-                        </c:if>
-                        <c:if test="${requestScope.toPage==requestScope.pageCount}">
-                        <li class="disabled">
-							<span>>></span>
-                        </li>
-                        </c:if>
-                      
+					
+                        
                  	</ul>
                 </div>
             </div>

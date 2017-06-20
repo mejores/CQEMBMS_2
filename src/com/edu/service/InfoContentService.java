@@ -8,13 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edu.dao.InfoContentMapper;
-import com.edu.dao.InfoSlaveMapper;
-import com.edu.dao.InfoSlideMapper;
 import com.edu.entity.InfoContent;
 import com.edu.entity.InfoContentExample;
-import com.edu.entity.InfoSlideExample;
 import com.edu.entity.InfoContentExample.Criteria;
-import com.edu.util.Office2Html;
 
 @Service
 public class InfoContentService {
@@ -23,10 +19,10 @@ public class InfoContentService {
 	private InfoContentMapper infoContentMapper;
 	
 	@Autowired
-	private InfoSlaveMapper infoSlaveMapper;
+	private InfoSlaveService infoSlaveService;
 	
 	@Autowired
-	private InfoSlideMapper infoSlideMapper;
+	private InfoSlideService infoSlideService;
 	
 	public List<InfoContent> getAll(InfoContentExample info){
 		//return infoContentMapper.selectByExampleWithSlaves(null);
@@ -44,17 +40,17 @@ public class InfoContentService {
 	}
 	
 	public boolean deleteContentbyConNo(String conNo) {
+		Criteria criteria;
 		//删除主要信息体
-		//infoContentMapper.deleteByPrimaryKey()
+		InfoContentExample contentExample=new InfoContentExample();
+		criteria=contentExample.createCriteria();
+		criteria.andConNoEqualTo(conNo);
+		if(infoContentMapper.deleteByExample(contentExample)<1){
+			return false;
+		}
 		
-		//删除关联的图片
-		//InfoSlideExample slideExample=new InfoSlideExample();
-		//Criteria criteria =slideExample.createCriteria();
-		//criteria.andConNoEqualTo(conNo);
-		//infoSlideMapper.deleteByExample(new InfoSlideExample());
-		//删除关联的附件
-		System.out.println("调用删除");
-		//删除所有实体内容
+		infoSlaveService.deleteByConNo(conNo);
+		infoSlideService.deleteByConNo(conNo);
 		return true;
 	}
 
