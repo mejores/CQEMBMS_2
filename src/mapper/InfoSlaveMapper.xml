@@ -89,6 +89,13 @@
     from info_slave
     where slave_id = #{slaveId,jdbcType=INTEGER}
   </select>
+  <select id="selectByConNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from info_slave
+    where con_no = #{conNO,jdbcType=VARCHAR}
+   
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from info_slave
     where slave_id = #{slaveId,jdbcType=INTEGER}

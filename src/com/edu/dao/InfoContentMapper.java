@@ -31,4 +31,6 @@ public interface InfoContentMapper {
     int updateByPrimaryKeySelective(InfoContent record);
 
     int updateByPrimaryKey(InfoContent record);
+    
+    int updateByConNoSelective(InfoContent record);
 }

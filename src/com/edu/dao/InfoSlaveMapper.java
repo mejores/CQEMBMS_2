@@ -19,6 +19,8 @@ public interface InfoSlaveMapper {
     List<InfoSlave> selectByExample(InfoSlaveExample example);
 
     InfoSlave selectByPrimaryKey(Integer slaveId);
+    
+    List<InfoSlave> selectByConNo(String conNo);
 
     int updateByExampleSelective(@Param("record") InfoSlave record, @Param("example") InfoSlaveExample example);
 

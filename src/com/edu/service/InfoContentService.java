@@ -53,5 +53,15 @@ public class InfoContentService {
 		infoSlideService.deleteByConNo(conNo);
 		return true;
 	}
+	
+	//更新消息
+	public boolean updateContent(InfoContent info) {
+		info.setModifyTime(new Date());
+		if(infoContentMapper.updateByConNoSelective(info)>0){
+			return true;
+		}
+		return false;
+		
+	}
 
 }

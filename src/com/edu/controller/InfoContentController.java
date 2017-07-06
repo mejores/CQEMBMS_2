@@ -160,7 +160,7 @@ public class InfoContentController {
 				String conHtml= new Office2Html().wordToHtml(basePath+"webFiles/"+content.getConPath(), basePath+"htmlFiles/");
 				if(conHtml!=null){
 					
-					User user= (User)session.getAttribute("user");
+					User user= (User)session.getAttribute("userInfo");
 					if(user!=null){
 						content.setPublisher(user.getRealName());
 					}
@@ -181,6 +181,23 @@ public class InfoContentController {
 		if(infoContentService.deleteContentbyConNo(conNo)){
 			return JsonWithMsg.success();
 		}
+		return JsonWithMsg.fail();
+	}
+	
+	//修改消息
+	@ResponseBody
+	@RequestMapping(value="/updateContent/{conNo}",method=RequestMethod.PUT)
+	public JsonWithMsg updateContent(InfoContent info,HttpSession session){
+		//infoContentService
+		User user=(User)session.getAttribute("userInfo");
+		if(user!=null){
+			info.setEditor(user.getRealName());
+		}
+		
+		if(infoContentService.updateContent(info)){
+			return JsonWithMsg.success();
+		}
+		
 		return JsonWithMsg.fail();
 	}
 	

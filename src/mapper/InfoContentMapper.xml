@@ -432,4 +432,48 @@
       comment = #{comment,jdbcType=VARCHAR}
     where con_id = #{conId,jdbcType=INTEGER}
   </update>
+  <update id="updateByConNoSelective" parameterType="com.edu.entity.InfoContent">
+   update info_content
+    <set>
+      <if test="plateNo != null">
+        plate_no = #{plateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="conTitle != null">
+        con_title = #{conTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null">
+        sub_title = #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+
+      <if test="editor != null">
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="statu != null">
+        statu = #{statu,jdbcType=TINYINT},
+      </if>
+
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="istop != null">
+        istop = #{istop,jdbcType=TINYINT},
+      </if>
+      <if test="conHtml != null">
+        con_html = #{conHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="conPath != null">
+        con_path = #{conPath,jdbcType=VARCHAR},
+      </if>
+      <if test="visitCount != null">
+        visit_count = #{visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where con_no = #{conNo,jdbcType=VARCHAR}
+  </update>
 </mapper>

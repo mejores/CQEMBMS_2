@@ -19,12 +19,16 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.edu.entity.InfoSlave;
 import com.edu.function.UploadBean;
+import com.edu.service.InfoSlaveService;
 import com.edu.util.JsonWithMsg;
 import com.edu.util.MD5Encoder;
 
@@ -32,6 +36,10 @@ import com.edu.util.MD5Encoder;
 @RequestMapping("/slave")
 @Controller
 public class InfoSlaveController {
+	
+	@Autowired
+	InfoSlaveService infoSlaveService;
+	
 	
 	//上传附件
 	@RequestMapping("/upLoadSlaves")
@@ -89,6 +97,20 @@ public class InfoSlaveController {
 		    } 
 				
 				return JsonWithMsg.success().add("res", res);
+	}
+	
+	//查看附件
+	@ResponseBody
+	@RequestMapping("/getByConNo/{conNo}")
+	public JsonWithMsg getByConNo(@PathVariable("conNo")String conNo){
+		if(conNo==null){
+			return JsonWithMsg.fail();
+		}
+		List<InfoSlave> slaves=infoSlaveService.getByConNo(conNo);
+		if(slaves.isEmpty()){
+			return JsonWithMsg.fail();
+		}
+		return JsonWithMsg.success().add("slaves",slaves);
 	}
 
 }

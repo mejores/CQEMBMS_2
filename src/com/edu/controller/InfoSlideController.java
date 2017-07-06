@@ -59,7 +59,7 @@ public class InfoSlideController {
 		return JsonWithMsg.success().add("pageInfo", page);
 	}
 	
-	//删除消息
+	//删除轮播图
 	@ResponseBody
 	@RequestMapping(value="/deleteBySlideId/{slideId}",method=RequestMethod.DELETE)
 	public JsonWithMsg deleteByConNo(@PathVariable("slideId")Integer slideId) {

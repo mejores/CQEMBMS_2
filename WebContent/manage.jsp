@@ -98,7 +98,7 @@
     </div>
     <!--如果使用nav-pills等要占用整行-->
     <ul class="nav navbar-nav pull-right">
-        <li><a href="">欢迎您，${sessionScope.userInfo.userId}</a></li>
+        <li><a href="">欢迎您，${sessionScope.userInfo.realName}</a></li>
         <li><a href="user/logout">退出</a></li>
         <li><a href="">消息 <span class="badge">10</span></a></li>
     </ul>
@@ -701,6 +701,30 @@
                       </div>
             	</div>
             </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" name="commit" onclick="slideModel.addSlide()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--查看附件模态框-->
+<div class="modal fade" id="modal-showSlaves" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ><span class="badge text-info">查看附件</span></h4>
+            </div>
+            <div class="modal-body">
+    			<!-- 附件内容 -->
+    			<div name="slaves">
+    			
+    			</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>

@@ -137,23 +137,23 @@ contentModel.build_table=function(infolist,platelist){
 	plateTemp+='</select>';
 	$.each(infolist,function(index,item){
 	
-	    var infoTemp=' <tr > <td><input type="hidden" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
+	    var infoTemp=' <tr > <td><input type="hidden" name="info-conNO" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
          '<td><input name="sub-title" type="text" value="'+item.subTitle+'" class="form-control" readonly  ></td>'+
          '<td>'+plateTemp+'</td>'+
          '<td><input name="info-author" type="text" value="'+item.author+'" class="form-control" readonly style="width: 100px"></td>'+
          '<td >'+item.publisher+'</td>'+
-         '<td>'+item.editor+'</td>'+
-         '<td>'+item.modifyTime+'</td>'+
+         '<td>'+(item.editor==null?"":item.editor)+'</td>'+
+         '<td>'+(item.modifyTime==null?"":item.modifyTime)+'</td>'+
          '<td>'+item.pubTime+'</td>'+
          '<td><div class="checkbox">'+
-             '<label><input type="checkbox" disabled checked="'+(item.istop=="1"?true:false)+'"></label>'+
+             '<label><input name="info-istop" type="checkbox" disabled '+(item.istop=="1"?"checked":"")+'></label>'+
          '</div></td>'+
          '<td><div class="checkbox">'+
-             '<label><input type="checkbox" value="" #{statu} disabled></label>'+
+             '<label><input name="info-statu" type="checkbox" '+(item.statu=="1"?"checked":"")+' disabled></label>'+
          '</div>'+
          '</td>'+
          '<td>36</td>'+
-         '<td><a href="">查看附件</a></td>'+
+         '<td><a name="show-slaves">查看附件</a></td>'+
          '<td>'+
              '<div class="btn-group btn-group-sm">'+
                  '<button class="btn btn-primary" name="btn-edit-content">修改</button>'+
@@ -221,8 +221,10 @@ $(document).on("click","button[name='btn-delete-content']",function(){
 		$(this).prev("button").text("修改");
 		$(this).parents("tr").find("input").attr("readonly", true);
 		$(this).parents("tr").find("select").attr("disabled", true);
-		$(this).parents("tr").find("input").css("background-color", "rgba(255, 255, 255, 0)");
-		$(this).parents("tr").find("select").css("background-color", "rgba(255, 255, 255, 0)");
+		$(this).parents("tr").find("input[type='checkbox']").attr("disabled", true);
+		$(this).parents("tr").css("background-color", "rgba(255, 255, 255, 0)");
+		//$(this).parents("tr").find("select").css("background-color", "rgba(255, 255, 255, 0)");
+		//$(this).parents("tr").find("input[type='checkbox']").css("background-color", "rgba(255, 255, 255, 0)");
 	}
 })
 
@@ -233,8 +235,10 @@ $(document).on("click","button[name='btn-edit-content']",function(){
 		$(this).siblings("button").text("撤销");
 		$(this).parents("tr").find("input").attr("readonly", false);
 		$(this).parents("tr").find("select").attr("disabled", false);
-		$(this).parents("tr").find("input").css("background-color", "#C0FF3E");
-		$(this).parents("tr").find("select").css("background-color", "#C0FF3E");
+		$(this).parents("tr").find("input[type='checkbox']").attr("disabled", false);
+		$(this).parents("tr").css("background-color", "#C0FF3E");
+		//$(this).parents("tr").find("select").css("background-color", "#C0FF3E");
+		//$(this).parents("tr").find("input[type='checkbox']").css("background-color", "#C0FF3E");
 	}else{
 		//执行修改操作
 		contentModel.editContent(this);
@@ -246,22 +250,40 @@ $(document).on("click","button[name='btn-edit-content']",function(){
 
 contentModel.editContent=function(obj){
 	var parent=$(obj).parents("tr");
-	//
+	var infoConNo=$(parent).find("input[name='info-conNO']").val();
 	var infoTitle=$(parent).find("input[name='info-title']").val();
 	var subTitle=$(parent).find("input[name='sub-title']").val();
 	var infoAuthor=$(parent).find("input[name='info-author']").val();
 	var infoSelect=$(parent).find("input[name='info-select']").val();
-	//alert(infoTitle);
-	var data={"conTitle":infoTitle,"subTitle":subTitle,"author":infoAuthor,"plateNo":infoSelect}
-	//ajax
+	var infoStatu=($(parent).find("input[name='info-statu']").is(':checked')==true)?1:0;
+	var infoIstop=($(parent).find("input[name='info-istop']").is(':checked')==true)?1:0;
+	var infodata={"conTitle":infoTitle,"subTitle":subTitle,"author":infoAuthor,
+			"plateNo":infoSelect,"istop":infoIstop,"statu":infoStatu,"_method":"PUT"}
+	//check infos
+	if(infoTitle.length<3){
+		layer.msg("标题不能少于三个字！");
+	}else{
+		$.ajax({
+			url:"content/updateContent/"+infoConNo,
+			type:"POST",
+			data:infodata,
+			success:function(result){
+				layer.msg(result.msg)
+				if(result.code=="100"){
+					$(this).text("删除");
+					$(this).prev("button").text("修改");
+					$(this).parents("tr").find("input").attr("readonly", true);
+					$(this).parents("tr").find("select").attr("disabled", true);
+					$(this).parents("tr").find("input[type='checkbox']").attr("disabled", true);
+					$(this).parents("tr").css("background-color", "rgba(255, 255, 255, 0)");
+				}
+			}
+		})
+	}
+	//put operation
 }
 
-//编辑消息2
-/*contentModel.btnEdit=function (obj) {
-    var tt= obj.parentNode.parentNode.parentNode;
-    var pp=tt.document.getElementsByTagName("input");
-    alert(pp);
-}*/
+
 
 //消息查找
 contentModel.doSearch=function(obj){
@@ -290,9 +312,32 @@ contentModel.fresh=function () {
     }
 
 //查看附件
-contentModel.showSlaves=function(){
+$(document).on("click","a[name='show-slaves']",function(){
+	var conNo=$(this).parents("tr").find("input[name='info-conNO']").val();
+	$.getJSON("slave/getByConNo/"+conNo,function(result){
+		if(result.code=="100"){
+			$('#modal-showSlaves').modal("show");
+			$('#modal-showSlaves div[name="slaves"]').empty();
+			$.each(result.extend.slaves,function(index,slave){
+				$('#modal-showSlaves div[name="slaves"]').append(slave.logName+'<button type="button" conno="'+slave.conNo+'" class="btn btn-danger btn-sm">删除</button><br/>');
+			})
+			//为删除按钮绑定事件
+			$(document).on("click","#modal-showSlaves div[name='slaves'] button",function(){
+				layer.msg("shanchu"+$(this));
+			})
+			
+		}else
+			{
+			layer.msg("该消息无附件！",{
+				time:1000
+			});
+			}
+	})
 	
-}
+	
+})
+
+//删除附件
 
 
 /******************************************************************************/
@@ -399,11 +444,15 @@ slideModel.btnAddSlide=function(){
 slideModel.addSlide=function(){
 	//$("#addPicFile")
 	var f=$("#addPicFile").val()
-	 if(f==null||f==""){layer.msg("请选择要上传的图片！");}else{
+	 if(f==null||f==""){layer.msg("请选择要上传的图片！",{
+			time:1000
+		});}else{
 		 if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(f))
 	        {
 
-			 layer.msg("图片类型必须是.gif,jpeg,jpg,png中的一种")
+			 layer.msg("图片类型必须是.gif,jpeg,jpg,png中的一种",{
+					time:1000
+				})
 	         // return false;
 	        }else{	
 	 //如果已经选中与之关联的消息
@@ -431,7 +480,9 @@ slideModel.addSlide=function(){
 	
 		}
 	 else{
-		layer.msg("请选择要关联的消息！");
+		layer.msg("请选择要关联的消息！",{
+			time:1500
+		});
 	 }
 	 }
 	 }
@@ -447,7 +498,9 @@ $(document).on("click","button[name='btn-delete-slide']",function(){
 			url:"slide/deleteBySlideId/"+slideId,
 			type:"DELETE",
 			success:function(result){
-				layer.msg(result.msg);
+				layer.msg(result.msg,{
+					time:1500
+				});
 			}
 		})
 		  
@@ -536,7 +589,9 @@ slideModel.picPreview=function(file){
 	upLoadModel.uploadWebFile= function() {
   
 	if($("#webFile").val()==null||$("#webFile").val()==""){
-		layer.msg('网页文件未选择！');
+		layer.msg('网页文件未选择！',{
+			time:1500
+		});
 		}else{
           // .准备FormData
           var fd = new FormData();

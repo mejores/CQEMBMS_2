@@ -18,7 +18,7 @@ public class UserService {
 		UserExample userExample=new UserExample();
 		Criteria criteria=userExample.createCriteria();
 		criteria.andUserNameEqualTo(user.getUserName());
-		criteria.andUserPassEqualTo(user.getUserPass());
+		//criteria.andUserPassEqualTo(user.getUserPass());
 		try {
 			return userMapper.selectByExample(userExample).get(0);
 		} catch (IndexOutOfBoundsException e) {

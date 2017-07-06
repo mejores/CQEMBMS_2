@@ -42,4 +42,10 @@ public class InfoSlaveService {
 		
 		return true;
 	}
+	
+	
+	//根据conNo查询附件
+	public List<InfoSlave> getByConNo(String conNo) {
+		return infoSlaveMapper.selectByConNo(conNo);
+	}
 }

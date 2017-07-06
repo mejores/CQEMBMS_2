@@ -1,6 +1,7 @@
 package com.edu.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,10 @@ public class UserController {
 	//登录
 	@ResponseBody
 	@RequestMapping("/login")
-	public JsonWithMsg login(User user,HttpServletRequest request) {
-		if(userService.getUser(user)!=null){
-			request.getSession().setAttribute("userInfo", user);
-			System.out.println(user);
+	public JsonWithMsg login(User user,HttpSession session) {
+		User logUser=userService.getUser(user);
+		if(logUser!=null){
+			session.setAttribute("userInfo", logUser);
 			return JsonWithMsg.success().setMsg("manage.jsp");
 		}else {
 			return JsonWithMsg.fail().setMsg("用户名或密码错误");
@@ -33,8 +34,8 @@ public class UserController {
 	
 	//注销
 	@RequestMapping("/logout")
-	public String logou(HttpServletRequest request) {
-		request.getSession().invalidate();
+	public String logou(HttpSession session) {
+		session.invalidate();
 		 return "redirect:/login.jsp";
 	}
 	
