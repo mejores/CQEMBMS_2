@@ -21,6 +21,9 @@ var slideModel={};
 //定义上传文件处理模型
 var upLoadModel={};
 
+//定义用户处理模型
+var userModel={};
+
 /**************************************************************************/
 /****************消息处理开始**************************************************/
 /**************************************************************************/
@@ -70,7 +73,7 @@ contentModel.selectType="all";
 contentModel.load=function(pn){
 	$.ajax({
 		url:"content/getAllInfos",
-		data:{"pn":pn,"type":contentModel.selectType},
+		data:{"pn":pn,"type":contentModel.selectType,"pageSize":"8"},
 		type:"get",
 		success:function(result){
 			console.log(result);
@@ -90,7 +93,7 @@ contentModel.load=function(pn){
 contentModel.loadWithoutSelect=function(pn){
 	$.ajax({
 		url:"content/getAllInfos",
-		data:{"pn":pn,"type":contentModel.selectType},
+		data:{"pn":pn,"type":contentModel.selectType,"pageSize":"8"},
 		type:"get",
 		success:function(result){
 			console.log(result);
@@ -137,7 +140,7 @@ contentModel.build_table=function(infolist,platelist){
 	plateTemp+='</select>';
 	$.each(infolist,function(index,item){
 	
-	    var infoTemp=' <tr > <td><input type="hidden" name="info-conNO" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
+	    var infoTemp=' <tr ><td><input type="checkbox" class=""/></td><td><input type="hidden" name="info-conNO" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
          '<td><input name="sub-title" type="text" value="'+item.subTitle+'" class="form-control" readonly  ></td>'+
          '<td>'+plateTemp+'</td>'+
          '<td><input name="info-author" type="text" value="'+item.author+'" class="form-control" readonly style="width: 100px"></td>'+
@@ -759,5 +762,139 @@ slideModel.picPreview=function(file){
     }
 /******************************************************************************/	
 /********************文件上传处理结束**********************************************/
+/******************************************************************************/
+	
+	
+	
+/******************************************************************************/	
+/********************用户信息管理开始**********************************************/
+/******************************************************************************/
+	
+	
+	function hasClass(obj,cls) {  
+	    return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));  
+	};  
+	  
+	function addClass(obj,cls) {  
+	    if (!hasClass(obj,cls)) obj.className += " " + cls;  
+	}
+	
+	function removeClass(obj,cls) {  
+	    if (hasClass(obj,cls)) {  
+	        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');  
+	        obj.className = obj.className.replace(reg, ' ');  
+	    }  
+	}
+	
+	//激活个人信息维护编辑状态
+	 userModel.activeEdit=function(obj,extend){
+		if(hasClass(obj.children[0],'glyphicon-pencil')){
+			obj.parentNode.parentNode.children[0].readOnly=false;
+			removeClass(obj.children[0],'glyphicon-pencil');
+			addClass(obj.children[0],'glyphicon-share-alt');
+			if(extend!=null){
+				$("#"+extend).css("display","block");
+			}
+		}else{
+			obj.parentNode.parentNode.children[0].readOnly=true;
+			removeClass(obj.children[0],'glyphicon-share-alt');
+			addClass(obj.children[0],'glyphicon-pencil');
+			if(extend!=null){
+				$("#"+extend).css("display","none");
+			}
+		}
+		}
+		
+	
+	//修改用户之前验证输入是否合法
+	 userModel.preChangeInfo=function(userName,password,realName){
+		//修改的项目数
+		var changeCount=0;
+		if($("#modal-changeInfo input[name='userName']").attr("readonly")==null){
+			if(userName.length<3||userName.length>30){
+				//返回错误消息
+				 $("#userWarning2").fadeIn(200);
+				 $("#userWarning2").text("用户名需3-30位");
+				 $("#userWarning2").fadeOut(3000);
+				return false;
+			}else{
+				changeCount+=1;
+			}
+		}
+		
+		
+		if($("#modal-changeInfo input[name='password']").attr("readonly")==null){
+			var confirmPwd=$("input[name='confirmPwd']").val();
+			
+			if(password.length<6||password.length>50){
+				
+				$("#passWarning2").fadeIn(200);
+				$("#passWarning2").text("密码需6-50位");
+				$("#passWarning2").fadeOut(5000);
+				return false;
+			}
+			if(password!=confirmPwd){
+				$("#passWarning2").fadeIn(200);
+				$("#passWarning2").text("前后密码不一致");
+				$("#passWarning2").fadeOut(5000);
+				return false;
+			}
+				changeCount+=1;
+		}
+		if($("#modal-changeInfo input[name='realName']").attr("readonly")==null){
+			  
+			  if(realName.length<2||realName.length>15){
+				  $("#realNameWarning2").fadeIn(200);
+					$("#realNameWarning2").text("真实姓名需2-15个字");
+					$("#realNameWarning2").fadeOut(5000);
+					return false;
+			  }else{
+					changeCount+=1;
+				}
+		}
+		if(changeCount==0){
+			layer.msg("未更改任何内容！",{
+				time:1500
+			});
+			return false
+		}
+		return true;
+	}
+	
+		//提交修改的个人信息
+	 userModel.changePersonalInfo=function (){
+			var userName=$("#modal-changeInfo input[name='userName']").val();
+			var password=$("#modal-changeInfo input[name='password']").val();
+			var realName=$("#modal-changeInfo input[name='realName']").val();
+			var userId=$("#modal-changeInfo input[name='userId']").val();
+			//
+			//alert(userId);
+			if(userModel.preChangeInfo(userName, password, realName)){
+				var userData={"password":password,"realName":realName,"_method":"PUT"};
+				
+					$.ajax({
+					url:"user/updateUser/"+userId,
+					type:"POST",
+					data:userData,
+					success:function(result){
+						layer.msg(result.msg)
+						if(result.code=="100"){
+							layer.alert(result.msg, {
+								  icon: 1,
+								  skin: 'layer-ext-moon'
+								},function(index){
+									location.href="login.jsp"
+									layer.close(index); 
+								  });
+							
+						}
+					}
+				})
+			}
+		}
+	
+	
+/******************************************************************************/	
+/********************用户信息管理结束**********************************************/
 /******************************************************************************/
 

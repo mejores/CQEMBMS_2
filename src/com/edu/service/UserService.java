@@ -18,7 +18,7 @@ public class UserService {
 		UserExample userExample=new UserExample();
 		Criteria criteria=userExample.createCriteria();
 		criteria.andUserNameEqualTo(user.getUserName());
-		//criteria.andUserPassEqualTo(user.getUserPass());
+		criteria.andUserPassEqualTo(user.getUserPass());
 		try {
 			return userMapper.selectByExample(userExample).get(0);
 		} catch (IndexOutOfBoundsException e) {
@@ -27,4 +27,25 @@ public class UserService {
 		
 		
 	}
+	public Boolean update(User user){
+		UserExample userExample=new UserExample();
+		Criteria criteria=userExample.createCriteria();
+		
+		if(user.getUserPass()!=null){
+			criteria.andUserPassEqualTo(user.getUserPass());
+		}
+		if(user.getRealName()!=null){
+			criteria.andRealNameEqualTo(user.getRealName());
+		}
+		if(user.getLastLoginTime()!=null){
+			criteria.andLastLoginTimeEqualTo(user.getLastLoginTime());
+		}
+		
+		if(userMapper.updateByPrimaryKeySelective(user)>0){
+			return true;
+		}
+		return false;
+		
+	}
+	
 }

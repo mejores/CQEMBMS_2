@@ -41,13 +41,13 @@
 			<div id="nav">
 				<div class="nav-list">
 					<ul>
-						<li class="active"><a href="index.jsp">首页</a></li>
-						<li><a href="listLoad.do?plate=12">督导动态</a></li>
-                    <li><a href="listLoad.do?plate=21">区县信息</a></li>
-                    <li><a href="listLoad.do?plate=22">督导报告</a></li>
-                    <li><a href="listLoad.do?plate=23">督导研究</a></li>
-                    <li><a href="listLoad.do?plate=31">组织机构</a></li>
-                    <li><a href="listLoad.do?plate=32">政策法规</a></li>
+					<li class="active"><a href="index.jsp">首页</a></li>
+					<li><a href="content/loadList?plate=12">督导动态</a></li>
+                    <li><a href="content/loadList?plate=21">区县信息</a></li>
+                    <li><a href="content/loadList?plate=22">督导报告</a></li>
+                    <li><a href="content/loadList?plate=23">督导研究</a></li>
+                    <li><a href="content/loadList?plate=31">组织机构</a></li>
+                    <li><a href="content/loadList?plate=32">政策法规</a></li>
                     <li><a href="#">服务平台</a></li>
 					</ul>
 				</div>
@@ -142,7 +142,7 @@
 				<div class="list-box m-t0 box-important-list">
 					<div class="head-line">
 						<h3>督导动态</h3>
-						<a href="listLoad.do?plate=12">更多>></a>
+						<a href="content/loadList?plate=12">更多>></a>
 					</div>
 					<ul class="list-unstyled list-article list-with-date" id="infolist12">
 					
@@ -158,7 +158,7 @@
 					<div class="list-box box-general-list">
 						<div class="head-line">
 							<h3>区县信息</h3>
-							<a href="listLoad.do?plate=21">更多>></a>
+							<a href="content/loadList?plate=21">更多>></a>
 						</div>
 						<ul class="list-unstyled list-article"  id="infolist21">
 						<%-- <c:forEach var="info" items="${requestScope.infolist21}">
@@ -180,7 +180,7 @@
 					<div class="list-box box-general-list">
 						<div class="head-line">
 							<h3>督导报告</h3>
-							<a href="listLoad.do?plate=22">更多>></a>
+							<a href="content/loadList?plate=22">更多>></a>
 						</div>
 						<ul class="list-unstyled list-article" id="infolist22">
 							
@@ -192,7 +192,7 @@
 				<div class="list-box box-general-list">
 					<div class="head-line">
 						<h3>督导研究</h3>
-						<a href="listLoad.do?plate=23">更多>></a>
+						<a href="content/loadList?plate=23">更多>></a>
 					</div>
 					<ul class="list-unstyled list-article" id="infolist23">
 						
@@ -222,7 +222,7 @@
 					<div class="list-box box-general-list">
 						<div class="head-line">
 							<h3>组织机构</h3>
-							<a href="listLoad.do?plate=31">更多>></a>
+							<a href="content/loadList?plate=31">更多>></a>
 						</div>
 						<ul class="list-unstyled list-article" id="infolist31">
 							
@@ -233,7 +233,7 @@
 					<div class="list-box box-general-list">
 						<div class="head-line">
 							<h3>政策法规</h3>
-							<a href="listLoad.do?plate=32">更多>></a>
+							<a href="content/loadList?plate=32">更多>></a>
 						</div>
 						<ul class="list-unstyled list-article" id="infolist33">
 							

@@ -98,7 +98,7 @@
     </div>
     <!--如果使用nav-pills等要占用整行-->
     <ul class="nav navbar-nav pull-right">
-        <li><a href="">欢迎您，${sessionScope.userInfo.realName}</a></li>
+        <li><a data-toggle="modal" data-target="#modal-changeInfo">欢迎您，${sessionScope.userInfo.realName}</a></li>
         <li><a href="user/logout">退出</a></li>
         <li><a href="">消息 <span class="badge">10</span></a></li>
     </ul>
@@ -150,6 +150,7 @@
                     <!--还有分类、备注
                     删除应该增加多条同时删除
                     -->
+                    <th><input type="checkbox" id=content_checkAll></th>
                     <th>标题</th>
                     <th>副标题</th>
                     <th>类别</th>
@@ -734,6 +735,111 @@
     </div>
 </div>
 
+
+	<!-- Modal for peronal info -->
+	<div class="modal" id="modal-changeInfo">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<span class="budge">个人信息维护</span>
+						
+					</h4>
+				</div>
+				<div class="modal-body">
+				
+					<div role="form" >
+						<div class="form-group form-inline">
+							<div class="row">
+							<div class="col-md-2"><label for="name" style="text-align:right">用户名</label></div>
+							<div class="col-md-6">
+								<div class="input-group">
+								<input name="userId" type="hidden"  value="${sessionScope.userInfo.userId}" >
+								<input name="userName" required class="form-control" type="text"  value="${sessionScope.userInfo.userName}" readonly >
+								<span class="input-group-btn">
+									<button class="btn btn-default">
+										<span class="glyphicon glyphicon-minus"></span>
+									</button>
+								</span>
+							</div>
+							
+							</div>
+							
+							<div class="col-md-3"><span style="color:red;display:none" id="userWarning2"></span></div>
+							</div>
+						</div>
+						
+						<div class="form-group form-inline">
+						<div class="row">
+							<div class="col-md-2"><label >密码</label></div>
+							<div class="col-md-6">
+							<div class="input-group">
+								<input class="form-control" name="password" type="password"  readonly>
+								<span class="input-group-btn">
+									<button class="btn btn-default" onclick="userModel.activeEdit(this,'group-confirm2')">
+										<span class="glyphicon glyphicon-pencil" ></span>
+									</button>
+								</span>
+							</div>
+							
+							</div>
+							
+						</div>
+						</div>
+						
+						<div class="form-group form-inline" id="group-confirm2" style="display:none">
+						<div class="row">
+							<div class="col-md-2"><label>确认密码</label></div>
+							<div class="col-md-6">
+							<div class="input-group">
+								<input class="form-control"  type="password"  name="confirmPwd">
+								<!-- <span class="input-group-btn">
+									<button class="btn btn-default" >
+										<span class="icon ion-edit" ></span>
+									</button>
+								</span> -->
+							</div>
+							
+							</div>
+							<div class="col-md-3"><span style="color:red;display:none" id="passWarning2"></span></div>
+						</div>
+						</div>
+						
+						<div class="form-group form-inline">
+						<div class="row">
+							<div class="col-md-2"><label >真实姓名</label>
+							</div>
+							<div class="col-md-6">
+							<div class="input-group">
+								<input class="form-control"  type="text"  name="realName" value="${sessionScope.userInfo.realName}" readonly>
+								<span class="input-group-btn">
+									<button class="btn btn-default" onclick="userModel.activeEdit(this,null)">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</button>
+								</span>
+							</div>
+							
+							</div>
+							<div class="col-md-4"><span style="color:red;display:none" id="realNameWarning2"></span></div>
+						</div>
+						</div>
+						
+					
+						
+					</div>
+				</div>
+				<div class="modal-footer">
+					<span class="pull-left" style="font-size:12px">上次登录时间：${sessionScope.userInfo.lastLoginTime}</span>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button id="mit" type="button" class="btn btn-primary" onclick="userModel.changePersonalInfo()">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		
 <!-------------------------------------------------------------------------------------------------------->
 
 
