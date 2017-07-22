@@ -98,7 +98,7 @@
     </div>
     <!--如果使用nav-pills等要占用整行-->
     <ul class="nav navbar-nav pull-right">
-        <li><a data-toggle="modal" data-target="#modal-changeInfo">欢迎您，${sessionScope.userInfo.realName}</a></li>
+        <li><a data-toggle="modal" data-target="#modal-changeInfo">欢迎您，<span style="color:#1E90FF">${sessionScope.userInfo.realName}</span></a></li>
         <li><a href="user/logout">退出</a></li>
         <li><a href="">消息 <span class="badge">10</span></a></li>
     </ul>
@@ -118,7 +118,7 @@
                     <button class="btn btn-primary" data-toggle="modal" data-target="#addInfo">
                         <span class="glyphicon glyphicon-plus"></span>添加</button>
                     <button class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span>修改</button>
-                    <button class="btn btn-primary"><span class="glyphicon glyphicon-trash"></span> 删除</button>
+                    <button class="btn btn-primary" id="content_deleteAll"><span class="glyphicon glyphicon-trash"></span> 删除</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="dropdown pull-left" >
@@ -761,7 +761,7 @@
 								<input name="userName" required class="form-control" type="text"  value="${sessionScope.userInfo.userName}" readonly >
 								<span class="input-group-btn">
 									<button class="btn btn-default">
-										<span class="glyphicon glyphicon-minus"></span>
+										<span class="glyphicon glyphicon-lock"></span>
 									</button>
 								</span>
 							</div>

@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import com.edu.util.JsonWithMsg;
 import com.edu.util.Office2Html;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.net.httpserver.Authenticator.Success;
 
 @RequestMapping("/content")
 @Controller
@@ -174,14 +176,34 @@ public class InfoContentController {
 				return JsonWithMsg.fail();
 	}
 	
-	//删除消息
+	/**
+	 * 单个/批量删除
+	 * @param conNo
+	 * @return JsonWithMsg
+	 */
 	@ResponseBody
 	@RequestMapping(value="/deleteContent/{conNo}",method=RequestMethod.DELETE)
-	public JsonWithMsg deleteContent(@PathVariable("conNo")String conNo){
-		if(infoContentService.deleteContentbyConNo(conNo)){
-			return JsonWithMsg.success();
+	public JsonWithMsg deleteContent(@PathVariable("conNo")String conNos){
+		//如果包含“~”符号表示批量删除
+		if(conNos.contains("~")){
+			String[] conNosArray=conNos.split("~");
+			List<String> conNosList=new ArrayList<String>();
+			for(String conNo:conNosArray){
+				conNosList.add(conNo);
+			}
+			
+			int affected=infoContentService.deleteByConNosBatch(conNosList);
+			if(affected>0){
+				return JsonWithMsg.success().setMsg("删除"+affected+"条消息成功");
+			}
+			
+		}else{//否则为单个删除
+			if(infoContentService.deleteContentbyConNo(conNos)){
+				return JsonWithMsg.success().setMsg("删除消息成功");
+			}
 		}
-		return JsonWithMsg.fail();
+		
+		return JsonWithMsg.fail().setMsg("删除消息失败");
 	}
 	
 	//修改消息

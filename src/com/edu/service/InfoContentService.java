@@ -38,7 +38,11 @@ public class InfoContentService {
 		return infoContentMapper.insertSelective(content);
 		
 	}
-	
+	/**
+	 * 删除单个
+	 * @param conNo
+	 * @return
+	 */
 	public boolean deleteContentbyConNo(String conNo) {
 		Criteria criteria;
 		//删除主要信息体
@@ -52,6 +56,25 @@ public class InfoContentService {
 		infoSlaveService.deleteByConNo(conNo);
 		infoSlideService.deleteByConNo(conNo);
 		return true;
+	}
+	
+	/**
+	 * 批量删除
+	 * @return 受影响的行数
+	 */
+	public int deleteByConNosBatch(List<String> conNosList){
+		Criteria criteria;
+		//删除主要信息体
+		InfoContentExample contentExample=new InfoContentExample();
+		criteria=contentExample.createCriteria();
+		criteria.andConNoIn(conNosList);
+		
+		int affected= infoContentMapper.deleteByExample(contentExample);
+		
+		//删除附件及轮播图
+		infoSlaveService.deletebyConNosBatch(conNosList);
+		infoSlideService.deletebyConNosBatch(conNosList);
+		return affected;
 	}
 	
 	//更新消息

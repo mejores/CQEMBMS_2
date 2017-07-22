@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.edu.dao.InfoSlideMapper;
+import com.edu.entity.InfoSlave;
+import com.edu.entity.InfoSlaveExample;
 import com.edu.entity.InfoSlide;
 import com.edu.entity.InfoSlideExample;
 import com.edu.entity.InfoSlideExample.Criteria;
@@ -153,6 +155,35 @@ public class InfoSlideService {
 					
 					return slide;
 		}
+	
+	/**
+	 * 批量删除轮播图
+	 * @param conNosList
+	 */
+
+	public int deletebyConNosBatch(List<String> conNosList) {
+		InfoSlideExample slideExample=new InfoSlideExample();
+		Criteria criteria=slideExample.createCriteria();
+		criteria.andConNoIn(conNosList);
+		int affected= infoSlideMapper.deleteByExample(slideExample);
+		
+		try {
+			List<InfoSlide> slideList=infoSlideMapper.selectByExample(slideExample);
+			//删除实体文件
+			for(InfoSlide sli:slideList){
+				if(sli.getImgPath().trim().length()>0){
+					new DeleteFile().delete(ContextPath.path+"slides/"+sli.getImgPath());
+				}
+			}
+			
+				
+		} catch (NullPointerException ne) {
+			System.out.println("批量删除轮播图实体文件失败！");
+		}
+		
+		return affected;
+		
+	}
 		
 	}
 

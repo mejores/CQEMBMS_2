@@ -9,7 +9,13 @@ $(function(){
 	//当添加图片模态框打开的时候
 	$('#modal-addSlide').on('shown.bs.modal', function (e) {
 		  slideModel.loadInfoList();
-		})
+		});
+	//全选/全不选
+	$("#content_checkAll").click(function(){
+ 		//alert($(this).prop("checked"));
+ 		$(".content_check_item").prop("checked",$(this).prop("checked"))
+	})
+
 })
 
 //定义消息处理模型
@@ -140,7 +146,7 @@ contentModel.build_table=function(infolist,platelist){
 	plateTemp+='</select>';
 	$.each(infolist,function(index,item){
 	
-	    var infoTemp=' <tr ><td><input type="checkbox" class=""/></td><td><input type="hidden" name="info-conNO" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
+	    var infoTemp=' <tr ><td><input type="checkbox" class="content_check_item"/></td><td><input type="hidden" name="info-conNO" value="'+item.conNo+'"><input name="info-title" type="text"  value="'+item.conTitle+'" class="form-control" readonly ></td>'+
          '<td><input name="sub-title" type="text" value="'+item.subTitle+'" class="form-control" readonly  ></td>'+
          '<td>'+plateTemp+'</td>'+
          '<td><input name="info-author" type="text" value="'+item.author+'" class="form-control" readonly style="width: 100px"></td>'+
@@ -155,7 +161,7 @@ contentModel.build_table=function(infolist,platelist){
              '<label><input name="info-statu" type="checkbox" '+(item.statu=="1"?"checked":"")+' disabled></label>'+
          '</div>'+
          '</td>'+
-         '<td>36</td>'+
+         '<td>'+item.visitCount+'</td>'+
          '<td><a name="show-slaves">查看附件</a></td>'+
          '<td>'+
              '<div class="btn-group btn-group-sm">'+
@@ -202,12 +208,17 @@ contentModel.build_nav=function(pageInfo){
 contentModel.btnAdd=function () {
 	var index = layer.load(3);
 }
-//删除消息
+
+
+
+
+
+//删除消息(单个删除)
 $(document).on("click","button[name='btn-delete-content']",function(){
 	if($(this).text()=="删除"){
-	var conNo=$(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
+	var conNo=$(this).parents("tr").find("td:eq(1)").find("input[type='hidden']").val();
 	//alert($(this).parents("tr").find("td:eq(0)").find("input[type='hidden']").val())
-	layer.confirm('确定删除吗?', {icon: 3, title:'删除消息'}, function(index){
+	layer.confirm('确定删除吗?', {icon: 2, title:'删除消息'}, function(index){
 		  //执行删除操纵
 		$.ajax({
 			url:"content/deleteContent/"+conNo,
@@ -230,6 +241,46 @@ $(document).on("click","button[name='btn-delete-content']",function(){
 		//$(this).parents("tr").find("input[type='checkbox']").css("background-color", "rgba(255, 255, 255, 0)");
 	}
 })
+
+
+//删除消息--批量删除
+$(document).on("click","#content_deleteAll",function(){
+	//查找所有选中的消息的id
+	var conNos="";
+	var sum=0;
+	$.each($(".content_check_item:checked"),function(){
+		var conNo= $(this).parents("tr").find("td:eq(1)").find("input[name='info-conNO']").val();
+		if(sum>0){
+			conNos+="~"
+		}
+		conNos+=conNo;
+		sum+=1;
+	})
+	if(sum>0){
+		alert(conNos)
+		layer.confirm('将删除'+sum+'条消息，确定吗?', {icon: 2, title:'批量删除'}, function(index){
+			  //执行删除操纵
+			$.ajax({
+				url:"content/deleteContent/"+conNos,
+				type:"DELETE",
+				success:function(result){
+					layer.msg(result.msg);
+				}
+			})
+			  
+			  layer.close(index);
+			}); 
+	}else{layer.msg('您未选择任何消息', {icon: 7,time:1500});}
+	
+	
+})
+
+//删除消息--单个选中/不选
+$(document).on("click",".content_check_item",function(){
+	var flag=$(".content_check_item:checked").length==$(".content_check_item").length;
+	$("#content_checkAll").prop("checked",flag);
+})
+
 
 //点击修改按钮过后，打开编辑状态
 $(document).on("click","button[name='btn-edit-content']",function(){
