@@ -1,5 +1,7 @@
 package com.edu.service;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -144,13 +146,19 @@ public class InfoSlideService {
 	                    	case "conNo": slide.setConNo(new String(item.getString().getBytes("iso-8859-1"),"utf-8"));break;
 	                    	case "imgCon": slide.setImgCon(new String(item.getString().getBytes("iso-8859-1"),"utf-8"));break;
 	                    	case "imgComment":slide.setComment(new String(item.getString().getBytes("iso-8859-1"),"utf-8"));break;
+	                    	case "slideId":if(item.getString().getBytes("iso-8859-1")!=null){
+	                    		slide.setSlideId(Integer.parseInt(new String(item.getString().getBytes("iso-8859-1"),"utf-8")));
+	                    		};break;
+	                    		
 	                    	}
 		                }  
 		            }  
 		        }  
 		   
-			    } catch (Exception e) {  
-			        e.printStackTrace();  
+			    } catch (Exception e) {
+			    	e.printStackTrace();
+			    	return null;
+			         
 			    } 
 					
 					return slide;
@@ -175,7 +183,6 @@ public class InfoSlideService {
 					new DeleteFile().delete(ContextPath.path+"slides/"+sli.getImgPath());
 				}
 			}
-			
 				
 		} catch (NullPointerException ne) {
 			System.out.println("批量删除轮播图实体文件失败！");
@@ -183,6 +190,32 @@ public class InfoSlideService {
 		
 		return affected;
 		
+	}
+
+	//修改轮播图--
+	public boolean updateBySlideId(HttpServletRequest request) {
+		InfoSlide slide=upLoadSlide(request);
+		if(slide.getSlideId()!=null&&!slide.getSlideId().equals("")){
+			if(slide.getImgPath()!=null&&!slide.getImgPath().equals("")){
+				String oldPath=infoSlideMapper.selectByPrimaryKey(slide.getSlideId()).getImgPath();
+				//删除旧的实体文件
+				try {
+						new DeleteFile().delete(ContextPath.path+"slides/"+oldPath);
+
+						
+				} catch (IndexOutOfBoundsException iobe) {
+					System.out.println("修改-删除实体文件失败！");
+				}
+			}
+		}
+		if(slide!=null&&slide.getSlideId()!=null&&!slide.getSlideId().equals("")){
+			if(infoSlideMapper.updateByPrimaryKeySelective(slide)>0){
+				return true;
+			}
+		
+			
+		}
+		return false;
 	}
 		
 	}

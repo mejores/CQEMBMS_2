@@ -68,4 +68,15 @@ public class InfoSlideController {
 		}
 		return JsonWithMsg.fail();
 	}
+	
+	
+	//修改轮播图
+	@ResponseBody
+	@RequestMapping(value="/updateBySlideId",method=RequestMethod.POST)
+	public JsonWithMsg updateByConNo(HttpServletRequest request) {
+		if(infoSlideService.updateBySlideId(request)){
+			return JsonWithMsg.success();
+		}
+		return JsonWithMsg.fail();
+	}
 }

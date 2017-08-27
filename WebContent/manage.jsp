@@ -98,7 +98,7 @@
     </div>
     <!--如果使用nav-pills等要占用整行-->
     <ul class="nav navbar-nav pull-right">
-        <li><a data-toggle="modal" data-target="#modal-changeInfo">欢迎您，<span style="color:#1E90FF">${sessionScope.userInfo.realName}</span></a></li>
+        <li><a data-toggle="modal" data-target="#modal-changeInfo" href="">欢迎您，<span style="color:#1E90FF">${sessionScope.userInfo.realName}</span></a></li>
         <li><a href="user/logout">退出</a></li>
         <li><a href="">消息 <span class="badge">10</span></a></li>
     </ul>
@@ -659,7 +659,7 @@
                 <div class="row">
             		<div class="col-md-2"><label >消息图片</label></div>
             		<div class="col-md-4">
-            		<input class="form-control" type="file" id="addPicFile" onchange="slideModel.picPreview(this)"
+            		<input class="form-control" type="file" id="addPicFile" onchange="slideModel.picPreview(this,'add')"
             		 accept="image/gif,image/jpeg,image/x-png"/></div>
             		 <div class="col-md-2"><label>备注</label></div>
             		 <div class="col-md-4">
@@ -835,6 +835,94 @@
 					<span class="pull-left" style="font-size:12px">上次登录时间：${sessionScope.userInfo.lastLoginTime}</span>
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button id="mit" type="button" class="btn btn-primary" onclick="userModel.changePersonalInfo()">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+		
+		
+		
+		
+		<!-- Modal for carosel 修改轮播图-->
+	<div class="modal fade" id="modal-update-slide">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<span class="budge">修改轮播图</span>
+						
+					</h4>
+				</div>
+				<div class="modal-body">
+				
+					<%-- <div role="form" >
+						<div class="form-group form-inline">
+							<div class="row">
+							<div class="col-md-2"><label for="name" style="text-align:right">关联消息</label></div>
+							<div class="col-md-6">
+								<div class="input-group">
+								<input name="userId" type="hidden"  value="${sessionScope.userInfo.userId}" >
+								<input name="userName" required class="form-control" type="text"  value="${sessionScope.userInfo.userName}" readonly >
+							</div>
+							
+							</div>
+							
+							<div class="col-md-3"><span style="color:red;width:200px;height:300px" id="userWarning2"></span></div>
+							</div>
+						</div>
+						
+						<div class="form-group form-inline">
+						<div class="row">
+							<div class="col-md-2"><label >备注</label></div>
+							<div class="col-md-6">
+							<div class="input-group">
+								<input class="form-control" name="password" type="text"  readonly>
+							</div>
+							
+							</div>
+							
+						</div>
+						</div>
+						
+						
+				
+					
+						
+					</div> --%>
+					<table class="table">
+					<tr class="row">
+						<td class="col-md-2"><label>消息说明</label></td>
+						<td class="col-md-5"><input class="form-control" type="text"
+						name="imgCon"  required/>
+						<input type="hidden"
+						name="slideId"  required/>
+						</td>
+						<td class="col-md-5" rowspan="3">
+						<div style="width:180px;height:180px;border: 1px solid" id="up-preview"></div>
+						</td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2"><label>关联消息</label></td>
+						<td class="col-md-5"><input class="form-control" type="text"
+						name="related" readonly  required/></td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2"><label>修改轮播图</label></td>
+						<td class="col-md-5"><input class="form-control" type="file"
+						name="pic-file" onchange="slideModel.picPreview(this,'up')"  required/></td>
+					</tr>
+					
+					</table>
+					
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button id="mit" type="button" class="btn btn-primary" onclick="slideModel.subUpdate()">提交</button>
 				</div>
 			</div>
 		</div>

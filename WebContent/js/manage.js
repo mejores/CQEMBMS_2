@@ -435,11 +435,11 @@ slideModel.build_table=function(list){
 		item.comment="无";
 	}
 	    var temp=' <tr > <td><input type="hidden" value="'+item.slideId+'"><input name="imgCon" type="text"  value="'+item.imgCon+'" class="form-control" readonly ></td>'+
-         '<td><input name="conNO" type="text" value="'+item.conNo+'" class="form-control" readonly  ></td>'+
+         '<td><input type="hidden" value="'+item.imgPath+'"><input name="conNo" type="text" value="'+item.conNo+'" class="form-control" readonly  ></td>'+
          '<td><input name="comment" type="text" value="'+item.comment+'" class="form-control" readonly  ></td>'+
          '<td>'+
              '<div class="btn-group btn-group-sm">'+
-                 '<button class="btn btn-primary" onclick="contentModel.btnEdit(this)">修改</button>'+
+                 '<button class="btn btn-primary" onclick="slideModel.btnEdit(this)">修改</button>'+
                  '<button class="btn btn-primary" name="btn-delete-slide">删除</button>'+
              '</div></td>'+
      '</tr>'
@@ -562,6 +562,72 @@ $(document).on("click","button[name='btn-delete-slide']",function(){
 		}); 
 })
 
+
+
+
+//修改轮播图-启动修改界面
+slideModel.btnEdit=function(obj){
+	var slideId=$(obj).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
+	var imgCon=$(obj).parents("tr").find("td:eq(0)").find("input[name='imgCon']").val();
+	var imgPath=$(obj).parents("tr").find("td:eq(1)").find("input[type='hidden']").val();
+	$("#modal-update-slide table input[name='slideId']").val(slideId);
+    $("#modal-update-slide table input[name='imgCon']").val(imgCon);
+    //预览
+    var prevDiv = document.getElementById('up-preview');  
+	 prevDiv.innerHTML = '<img src="upload/slides/' + imgPath + '" />'; 
+	  
+    //slideModel.picPreview();
+	$('#modal-update-slide').modal("show");
+	
+	//alert(slideId);
+}
+
+//修改轮播图-执行修改操作
+slideModel.subUpdate=function(){//需要将id保存到模态框
+	var slideId=$("#modal-update-slide table input[name='slideId']").val();
+	var imgCon= $("#modal-update-slide table input[name='imgCon']").val();
+	var picFile=$("#modal-update-slide table input[name='pic-file']").val();
+	var comment=$("#modal-update-slide table input[name='comment']").val();
+	if(picFile.trim()!=""){
+		 if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(picFile))
+		     {
+		
+				 layer.msg("图片类型必须是.gif,jpeg,jpg,png中的一种",{
+						time:1000
+					})
+		       return;
+		     }else{
+		    	 if(imgCon.trim()!=""||picFile!=""){
+		    		 var picfd = new FormData();
+		    		 picfd.append("slideId",slideId);
+		    			picfd.append("picfile",addPicFile.files[0]);
+		    			picfd.append("imgCon",imgCon);
+		    			picfd.append("comment",comment);
+		    		
+		    		  $.ajax({
+		    				url:'slide/updateBySlideId',
+		    				method:'post',
+		    				contentType:"multipart/form-data",   
+		    				type:"POST",  
+		    				data:picfd,    
+		    				processData: false,  // 告诉jQuery不要去处理发送的数据  
+		    				contentType: false,   // 告诉jQuery不要去设置Content-Type请求头 
+		    				success:function(result){
+		    						layer.msg(result.msg);}
+		    			}); 
+		    		 
+		    		 
+		    		 
+		    	 }else{
+		    		 layer.msg("您未作任何修改！",{
+							time:1000
+						})
+		    	 }
+		     }
+	 }
+
+}
+
 //加载可关联的消息列表
 slideModel.loadInfoList=function(pn){
 	if(pn==null){
@@ -598,9 +664,19 @@ slideModel.loadInfoList=function(pn){
 
 
 //图片预览
-slideModel.picPreview=function(file){
+slideModel.picPreview=function(file,loader){
+	var prevDiv;
+	if(loader=="up"){
+		prevDiv = document.getElementById('up-preview');  
+	}else if(loader=="add"){
+		prevDiv = document.getElementById('preview'); 
+	}
+	slideModel.doPreview(file,prevDiv);
+}
+//执行预览
+slideModel.doPreview=function(file,prevDiv){
 	//$("#addPicFile")
-	 var prevDiv = document.getElementById('preview');  
+	 //var prevDiv = document.getElementById('preview');  
 	 if (file.files && file.files[0])  
 	 {  
 	 var reader = new FileReader();  
