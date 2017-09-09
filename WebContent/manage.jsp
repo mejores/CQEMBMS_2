@@ -913,7 +913,7 @@
 					<tr class="row">
 						<td class="col-md-2"><label>修改轮播图</label></td>
 						<td class="col-md-5"><input class="form-control" type="file"
-						name="pic-file" onchange="slideModel.picPreview(this,'up')"  required/></td>
+						name="pic-file" id="updatePicfile" onchange="slideModel.picPreview(this,'up')" accept="image/gif,image/jpeg,image/x-png" required/></td>
 					</tr>
 					
 					</table>

@@ -17,6 +17,7 @@ public class ContextListener implements ServletContextListener {
 		//获取上下文并获取路径
 		ServletContext sContext=sce.getServletContext();
 		ContextPath.path=sContext.getRealPath("/upload/");
+		System.out.println("当前项目绝对路径:"+sContext.getRealPath("/"));
 	}
 
 }

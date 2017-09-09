@@ -569,6 +569,7 @@ $(document).on("click","button[name='btn-delete-slide']",function(){
 slideModel.btnEdit=function(obj){
 	var slideId=$(obj).parents("tr").find("td:eq(0)").find("input[type='hidden']").val();
 	var imgCon=$(obj).parents("tr").find("td:eq(0)").find("input[name='imgCon']").val();
+	$("#modal-update-slide table input[name='pic-file']").val("");
 	var imgPath=$(obj).parents("tr").find("td:eq(1)").find("input[type='hidden']").val();
 	$("#modal-update-slide table input[name='slideId']").val(slideId);
     $("#modal-update-slide table input[name='imgCon']").val(imgCon);
@@ -600,7 +601,7 @@ slideModel.subUpdate=function(){//需要将id保存到模态框
 		    	 if(imgCon.trim()!=""||picFile!=""){
 		    		 var picfd = new FormData();
 		    		 picfd.append("slideId",slideId);
-		    			picfd.append("picfile",addPicFile.files[0]);
+		    			picfd.append("picfile",updatePicfile.files[0]);
 		    			picfd.append("imgCon",imgCon);
 		    			picfd.append("comment",comment);
 		    		
@@ -613,7 +614,11 @@ slideModel.subUpdate=function(){//需要将id保存到模态框
 		    				processData: false,  // 告诉jQuery不要去处理发送的数据  
 		    				contentType: false,   // 告诉jQuery不要去设置Content-Type请求头 
 		    				success:function(result){
-		    						layer.msg(result.msg);}
+		    						layer.msg(result.msg);
+		    						if(result.code==100){
+		    							$('#modal-update-slide').modal("hide");
+		    		  				}
+		    				}
 		    			}); 
 		    		 
 		    		 

@@ -29,6 +29,17 @@ public class InfoContentService {
 		return infoContentMapper.selectByExample(info);
 	}
 	
+	/**
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public InfoContent getContentById(Integer conId) {
+		
+		return infoContentMapper.selectByPrimaryKeyWithSlaves(conId);
+	}
+	
+	
 	public int addContent(InfoContent content) {
 		Date date=new Date();
 		content.setPubTime(date);

@@ -83,6 +83,13 @@
       order by ${orderByClause}
     </if>
   </select>
+   <select id="selectTopN" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from info_slide
+    ORDER BY slide_id limit #{n,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

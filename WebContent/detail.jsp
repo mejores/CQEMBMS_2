@@ -1,21 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
  <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
- <%pageContext.setAttribute("basePathssss", request.getContextPath()); %>
+ <%pageContext.setAttribute("basePath", request.getContextPath()); %>
   
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+	<meta charset=UTF-8">
     <title>详情页 - 重庆教育督导网</title>
     <meta name="keywords" content="重庆教育督导，重庆市政府教育督导室">
     <meta name="description" content="重庆教育督导网，重庆市政府教育督导室主办。">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="${basePathssss}/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="${basePathssss}/static/css/global.css" rel="stylesheet" type="text/css">
-    <link href="${basePathssss}/static/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="${basePathssss}/favicon.ico">
+    <link href="${basePath}/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="${basePath}/static/css/global.css" rel="stylesheet" type="text/css">
+    <link href="${basePath}/static/css/main.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="${basePath}/favicon.ico">
     <script>
     
     //var $current = $("#article-id");

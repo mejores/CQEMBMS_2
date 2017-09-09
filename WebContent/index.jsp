@@ -61,80 +61,54 @@
 		<!-- 幻灯片+动态 -->
 		<div class="row">
 			<div class="col-sm-5 p-0">
-				<div class="list-box m-t0 index-pic">
+				<div class="list-box m-t0 index-pic" id="slidewrap">
 					<script type="text/javascript">
-						var swf_width = 400;
-						var swf_height = 260 + 20;
-						var title_height = 20;
-						var focus_height = swf_height + title_height;
-						var interval_time = 6;
-						var files=[];
-						var links=[];
-						var texts=[];
-						<c:forEach var="slide" items="${requestScope.slidelist}">
-						files.push('slidepic/${slide.img_path}');
-						links.push('detailLoad.do?urlstring=${slide.con_id}');
-						texts.push('${slide.img_con}');
-						</c:forEach>
-						
-						/* var files = [
-								'slidepic/1481768651004.jpg',
-								'static/images/examples/index-pic/201611110546120418_S.jpg',
-								'static/images/examples/index-pic/201611110235298374_S.jpg',
-								'static/images/examples/index-pic/201611110229230382_S.jpg',
-								'static/images/examples/index-pic/201611110004371723_S.jpg', ]; */
-						
-						//var links = [ '#', '#', '#', '#', '#', ];
-						/* var texts = [ '我市教育系统积极开展“消防宣传…', '黔江区命名首批“名师工作室”',
-								'送岗位进高校双选活动（大足专场…', '第二届重庆市青少年科学素养大赛…',
-								'江北区开展“校长谈规划”交流活动', ]; */
-						
-						var swf_src = 'static/swf/focus.swf';
-						document
-								.write('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="' + swf_width + '" height="' + focus_height + '">');
-						document
-								.write('<param name="movie" value="' + swf_src + '">');
-						document.write('<param name="quality" value="high">');
-						document.write('<param name="menu" value="false">');
-						document.write('<param name="wmode" value="opaque">');
-						document
-								.write('<param name="FlashVars" value="borderwidth='
-										+ swf_width
-										+ '&amp;borderheight='
-										+ swf_height
-										+ '&amp;textheight='
-										+ title_height
-										+ '&amp;interval_time='
-										+ interval_time
-										+ '&amp;pics='
-										+ files.join('|')
-										+ '&amp;links='
-										+ links.join('|')
-										+ '&amp;texts='
-										+ texts.join('|') + '">');
-						document
-								.write('<embed src="'
-										+ swf_src
-										+ '" wmode="opaque" FlashVars="borderwidth='
-										+ swf_width
-										+ '&amp;borderheight='
-										+ swf_height
-										+ '&amp;textheight='
-										+ title_height
-										+ '&amp;interval_time='
-										+ interval_time
-										+ '&amp;pics='
-										+ files.join('|')
-										+ '&amp;links='
-										+ links.join('|')
-										+ '&amp;texts='
-										+ texts.join('|')
-										+ '" menu="false" quality="high" width="'
-										+ swf_width
-										+ '" height="'
-										+ focus_height
-										+ '" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed>');
-						document.write('</object>');
+
+					var swf_width = 400;
+					var swf_height = 260 + 20;
+					var title_height = 20;
+					var focus_height = swf_height + title_height;
+					var interval_time = 6;
+					var files=[];
+					var links=[];
+					var texts=[];
+					//<c:forEach var="slide" items="${requestScope.slidelist}">
+					
+						//alert(slides)
+					 	 $.each(slides,function(index,slide){
+						files.push('upload/slides/'+slide.imgPath);
+						links.push('detailLoad.do?urlstring='+slide.conId);
+						texts.push(slide.imgCon);
+					}) 
+	
+					
+					  
+					
+					//</c:forEach>
+					
+					/* var files = [
+							'slidepic/1481768651004.jpg',
+							'static/images/examples/index-pic/201611110546120418_S.jpg',
+							'static/images/examples/index-pic/201611110235298374_S.jpg',
+							'static/images/examples/index-pic/201611110229230382_S.jpg',
+							'static/images/examples/index-pic/201611110004371723_S.jpg', ]; */
+					
+					//var links = [ '#', '#', '#', '#', '#', ];
+					/* var texts = [ '我市教育系统积极开展“消防宣传…', '黔江区命名首批“名师工作室”',
+							'送岗位进高校双选活动（大足专场…', '第二届重庆市青少年科学素养大赛…',
+							'江北区开展“校长谈规划”交流活动', ]; */
+					
+					var swf_src = 'static/swf/focus.swf';
+					document
+							.write('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="' + swf_width + '" height="' + focus_height + '">');
+					document
+							.write('<param name="movie" value="' + swf_src + '">');
+					document.write('<param name="quality" value="high">');
+					document.write('<param name="menu" value="false">');
+					document.write('<param name="wmode" value="opaque" id="slidesForShow">');
+					
+					document.write('</object>');
+					
 					</script>
 				</div>
 			</div>

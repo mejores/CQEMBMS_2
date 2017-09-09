@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.entity.InfoContent;
 import com.edu.entity.InfoContentExample;
 import com.edu.entity.InfoContentExample.Criteria;
+import com.edu.entity.InfoSlide;
 import com.edu.entity.User;
 import com.edu.function.UploadBean;
 import com.edu.service.FileService;
 import com.edu.service.InfoContentService;
 import com.edu.service.InfoPlateService;
+import com.edu.service.InfoSlideService;
 import com.edu.util.JsonWithMsg;
 import com.edu.util.Office2Html;
 import com.github.pagehelper.PageHelper;
@@ -43,6 +45,9 @@ public class InfoContentController {
 	
 	@Autowired
 	FileService fileService;
+	
+	@Autowired
+	InfoSlideService infoSlideService;
 	
 	@ResponseBody
 	@RequestMapping("/getAllInfosForIndex")
@@ -91,7 +96,10 @@ public class InfoContentController {
 		infos=infoContentService.getAll(info);
 		infoMap.put("infolist32",infos);
 		
-		return JsonWithMsg.success().add("infos", infoMap);
+		//轮播图片
+		List<InfoSlide> slidelist=infoSlideService.getTopNSlide(5);
+		//infoMap.put("slidelist", slidelist);
+		return JsonWithMsg.success().add("infos", infoMap).add("slidelist", slidelist);
 	}
 	
 	//加载消息列表
@@ -111,10 +119,11 @@ public class InfoContentController {
 	}
 	
 	//阅读消息
-	@RequestMapping("/loadDetail")
-	public String loadDetail(Model model){
-		
-		return "detail";
+	@RequestMapping("/loadDetail.do/{conId}")
+	public String loadDetail(@PathVariable("conId")Integer conId,Model model){
+
+		model.addAttribute("detail", infoContentService.getContentById(conId));
+		return "/WEB-INF/detail";
 	}
 	
 	@RequestMapping("/getAllInfos")

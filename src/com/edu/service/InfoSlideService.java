@@ -121,6 +121,7 @@ public class InfoSlideService {
 		                	  //文件类型
 		                	 String fileType = item.getName().substring(item.getName().lastIndexOf(".") + 1).toLowerCase();
 		                	 //文件不带后缀的名称
+		                	 System.out.println("has MultipartContent");
 		                      fileOriginal=item.getName().substring(0, item.getName().length()-fileType.length()-1);
 		                      //用于存储的文件名称（不带后缀）
 		                      String temp=new MD5Encoder().toMD5(fileOriginal+new Date().getTime());
@@ -131,6 +132,9 @@ public class InfoSlideService {
 		                     filePath = savePath + "/" + fileName; 
 		                      
 		                    BufferedInputStream in = new BufferedInputStream(item.getInputStream());// 获得文件输入流  
+		                    if(in!=null){
+		                    	System.out.println("不为空");
+		                    }
 		                    BufferedOutputStream out = new BufferedOutputStream(  
 		                            new FileOutputStream(new File(filePath)));// 获得文件输出流  
 		                    Streams.copy(in, out, true);// 开始把文件写到指定的上传文件夹  
@@ -216,6 +220,15 @@ public class InfoSlideService {
 			
 		}
 		return false;
+	}
+	
+	/**
+	 * 获取前N条轮播图集合
+	 * @return 轮播图片集合
+	 * @author joven
+	 */
+	public List<InfoSlide> getTopNSlide(Integer n) {
+		return infoSlideMapper.selectTopN(n);
 	}
 		
 	}

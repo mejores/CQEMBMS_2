@@ -17,6 +17,8 @@ public interface InfoSlideMapper {
     int insertSelective(InfoSlide record);
 
     List<InfoSlide> selectByExample(InfoSlideExample example);
+    
+    List<InfoSlide> selectTopN(Integer n);
 
     InfoSlide selectByPrimaryKey(Integer slideId);
 

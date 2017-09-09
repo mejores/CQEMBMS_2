@@ -107,8 +107,8 @@
     pub_time, modify_time, istop, con_html, con_path, visit_count, comment
   </sql>
   <sql id="WithSlave_Column_List">
-    con_id, c.con_no, plate_no, con_title, sub_title, author, publisher, editor, statu, 
-    pub_time, modify_time, istop, con_html, con_path, visit_count, c.comment,slave_id,phy_name,log_name
+    con_id, c.con_no con_no, plate_no, con_title, sub_title, author, publisher, editor, statu,
+    pub_time, modify_time, istop, con_html, con_path, visit_count, c.comment comment,slave_id,phy_name,log_name
   </sql>
   <select id="selectByExampleWithSlaves" parameterType="com.edu.entity.InfoContentExample" resultMap="WithSlaveResultMap">
     select
@@ -125,10 +125,11 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKeyWithSlave" parameterType="java.lang.Integer" resultMap="WithSlaveResultMap">
+  <select id="selectByPrimaryKeyWithSlaves" parameterType="java.lang.Integer" resultMap="WithSlaveResultMap">
     select 
     <include refid="WithSlave_Column_List" />
-    from info_content
+  from info_content c
+    left join info_slave s on c.con_no=s.con_no 
     where con_id = #{conId,jdbcType=INTEGER}
   </select>
   <select id="selectByExample" parameterType="com.edu.entity.InfoContentExample" resultMap="BaseResultMap">

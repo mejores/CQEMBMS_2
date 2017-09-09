@@ -33,6 +33,15 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   
+   <filter>
+    <filter-name>OnlineFilter</filter-name>
+    <filter-class>com.edu.filter.LoginCheck</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>OnlineFilter</filter-name>
+    <url-pattern>/manage.jsp</url-pattern>
+  </filter-mapping>
+  
   <!-- 设置编码格式为UTF-8,字符编码过滤器一定要放在所有过滤器之前 -->
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>

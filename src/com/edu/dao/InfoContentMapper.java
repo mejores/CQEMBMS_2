@@ -22,7 +22,7 @@ public interface InfoContentMapper {
     
     List<InfoContent> selectByExampleWithSlaves(InfoContentExample example);
 
-    InfoContent selectByPrimaryKeyWithSlave(Integer conId);
+    InfoContent selectByPrimaryKeyWithSlaves(Integer conId);
 
     int updateByExampleSelective(@Param("record") InfoContent record, @Param("example") InfoContentExample example);
 

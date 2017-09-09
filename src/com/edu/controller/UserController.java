@@ -32,7 +32,7 @@ public class UserController {
 		if(logUser!=null){
 			session.setAttribute("userInfo", logUser);
 			logUser.setLastLoginTime(new Date());
-			logUser.setUserPass(null);
+			//logUser.setUserPass(null);
 			userService.update(user);
 			return JsonWithMsg.success().setMsg("manage.jsp");
 		}else {
